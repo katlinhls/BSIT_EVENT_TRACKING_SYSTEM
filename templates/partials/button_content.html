@@ -1,0 +1,14 @@
+{# Build reusable button and link content from an optional icon, label, description, and arrow. #}
+{% if icon %}
+  <span class="action-icon">{% include 'partials/icon.html' with name=icon only %}</span>
+{% endif %}
+{% if label %}
+  <span class="action-text">
+    <span class="action-label">{{ label }}</span>
+    {# Show supporting text only when the caller passes a description. #}
+    {% if description %}<small class="action-description">{{ description }}</small>{% endif %}
+  </span>
+{% endif %}
+{% if arrow %}
+  <span class="action-arrow">{% include 'partials/icon.html' with name=arrow only %}</span>
+{% endif %}

@@ -1,0 +1,8 @@
+{# Offer a shortcut to the end-time field while the event can still be extended. #}
+<div class="event-end-reminder" data-end-reminder{% if not visible %} hidden{% endif %}>
+  <p role="status">
+    <strong>{{ event.name }} ends <span data-scheduled-end>{{ event.ends_at|date:"M j, g:i a" }}</span>.</strong>
+    Still running? Extend the end time before the event closes.
+  </p>
+  <a class="action-button action-button--primary action-button--compact" href="{% url 'events:event_edit' event.pk %}#id_end_time">Extend end time</a>
+</div>

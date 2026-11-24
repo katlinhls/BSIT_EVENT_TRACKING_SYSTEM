@@ -1,0 +1,68 @@
+{# Shared attendance analytics section included by Admin Overview and the organizer dashboard. #}
+{% load l10n %}
+
+<section class="attendance-analytics{% if compact %} attendance-analytics--compact{% endif %}" id="analytics" {% if compact %}aria-label="Attendance analytics"{% else %}aria-labelledby="analytics-heading"{% endif %}>
+  {% if not compact %}
+  <header class="management-header analytics-header">
+    <div>
+      <h2 id="analytics-heading">{% include 'partials/icon.html' with name='chart' only %} Attendance Analytics</h2>
+      <p>{{ analytics.event_count }} event{{ analytics.event_count|pluralize }} · {{ analytics.checked_in }} time-in{{ analytics.checked_in|pluralize }}</p>
+    </div>
+    {% include 'events/partials/analytics_filter.html' with field=analytics.filters.event only %}
+  </header>
+  {% endif %}
+
+  <div class="analytics-charts">
+    <section class="management-panel analytics-panel" aria-labelledby="attendance-breakdown">
+      <div class="analytics-panel-title">
+        <h3 id="attendance-breakdown">{% if compact %}{% include 'partials/icon.html' with name='chart' only %} {% endif %}Attendance breakdown</h3>
+        {% if compact %}
+          <details class="organizer-analytics-filter"{% if analytics.filters.event.errors or analytics.filters.event.value %} open{% endif %}>
+            <summary>{% include 'partials/icon.html' with name='filter' only %} Filter</summary>
+            {% include 'events/partials/analytics_filter.html' with field=analytics.filters.event only %}
+          </details>
+        {% endif %}
+      </div>
+      {# Use the view's completion percentage to size the completed part of the ring. #}
+      <div class="analytics-breakdown">
+      <div class="analytics-ring"{% if analytics.checked_in %} data-has-scans style="--completion: {{ analytics.completion_rate|unlocalize }}%"{% endif %}>
+        <div class="analytics-ring-label">
+          <strong>{% if analytics.checked_in %}{{ analytics.completion_rate|floatformat:"-1" }}%{% else %}—{% endif %}</strong>
+          <span>Complete</span>
+        </div>
+      </div>
+      <dl class="analytics-key">
+        <div>
+          <dt><span class="analytics-swatch" aria-hidden="true"></span>Completed</dt>
+          <dd>{{ analytics.completed }}{% if compact %} daily record{{ analytics.completed|pluralize }}{% endif %}</dd>
+        </div>
+        <div>
+          <dt><span class="analytics-swatch analytics-swatch--pending" aria-hidden="true"></span>{% if compact %}Time In only{% else %}Time-in only{% endif %}</dt>
+          <dd>{{ analytics.time_in_only }}{% if compact %} daily record{{ analytics.time_in_only|pluralize }}{% endif %}</dd>
+        </div>
+      </dl>
+      </div>
+    </section>
+
+    <section class="management-panel analytics-panel" aria-labelledby="section-completion">
+      <h3 id="section-completion">{% if compact %}{% include 'partials/icon.html' with name='chart' only %} {% endif %}Completion by year and section</h3>
+      {% if analytics.sections %}
+        <p class="analytics-chart-note">{% if compact %}Both scans recorded as a share of daily Time Ins{% else %}Completed attendance as a share of recorded time-ins.{% endif %}</p>
+        <ul class="analytics-bars">
+          {# Draw one bar for each year-and-section group with recorded attendance. #}
+          {% for row in analytics.sections %}
+            <li>
+              <div class="analytics-bar-label">
+                <strong>{% if compact and row.student__program %}{{ row.student__program }} {% endif %}{{ row.student__year_level|default:"Unassigned" }}</strong>
+                <span>{% if compact %}<span class="visually-hidden">{% endif %}{{ row.completed }} of {{ row.checked_in }} complete · {% if compact %}</span>{% endif %}{{ row.rate|floatformat:"-1" }}%</span>
+              </div>
+              <div class="analytics-track" aria-hidden="true"><span style="width: {{ row.rate|unlocalize }}%"></span></div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p class="analytics-empty">Section results will appear after students time in.</p>
+      {% endif %}
+    </section>
+  </div>
+</section>

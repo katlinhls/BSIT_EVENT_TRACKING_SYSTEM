@@ -1,0 +1,70 @@
+{# Organizer camera scanner for one event, with time-in and time-out modes. #}
+{% extends "portal/section_base.html" %}
+{% load static %}
+{% block title %}Scanner - {{ event.name }}{% endblock %}
+{% block extra_head %}
+{{ block.super }}
+{# Load the QR reader library used to decode camera frames. #}
+<script src="https://unpkg.com/html5-qrcode" defer></script>
+<link rel="stylesheet" href="{% static 'css/event-timing.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+<div>
+<h1>Attendance Scanner</h1>
+<p class="muted">{{ event.name }} · {% include 'events/partials/date_range.html' with event=event only %} · {{ event.venue }}</p>
+</div>
+<div style="display:flex; gap:10px; align-items:center; flex-wrap:wrap;">
+<a class="action-button" href="{% url 'events:organizer_dashboard' %}">{% include 'partials/button_content.html' with icon='back' label='Back to Organizer Dashboard' only %}</a>
+<a class="action-button" href="{% url 'attendance:attendance_list' event.pk %}">{% include 'partials/button_content.html' with icon='activity' label='Attendance List' arrow='arrow' only %}</a>
+</div>
+</div>
+
+<div class="scanner-layout">
+<div class="card scanner-card" data-attendance-scanner="{{ event.pk }}"
+     data-scan-url="{% url 'attendance:scan_api' event.pk %}"
+     data-timing-url="{% url 'attendance:scanner_timing' event.pk %}?day={{ session.day|date:'Y-m-d' }}">
+{% include 'events/partials/end_reminder.html' with event=event visible=timing.show_end_reminder only %}
+{% if event.attendance_day_count > 1 %}
+    <h2>{{ session.day|date:"l, M j, Y" }}</h2>
+    <p class="muted">{{ session.starts_at|date:"g:i a" }} – {{ session.ends_at|date:"M j, g:i a" }}</p>
+    <form class="attendance-day-form" method="get">
+        {% include 'attendance/partials/day_input.html' with event=event selected_day=session.day required=True only %}
+        <button type="submit" class="action-button action-button--compact">Open day</button>
+        <a class="action-button action-button--compact" href="{% url 'attendance:scanner' event.pk %}">Open current day</a>
+    </form>
+{% endif %}
+{# Render a Django security token the scanner script can read for its POST. #}
+<form hidden>{% csrf_token %}</form>
+<div class="scan-buttons">
+<button type="button" id="inBtn" class="action-button" aria-pressed="{{ timing.time_in_allowed|yesno:'true,false' }}"{% if not timing.time_in_allowed %} disabled{% endif %}>{% include 'partials/button_content.html' with icon='sign-in' label='Time In' only %}</button>
+<button type="button" id="outBtn" class="action-button" aria-pressed="{{ timing.time_in_allowed|yesno:'false,true' }}" aria-describedby="scan-timing-message"{% if not timing.time_out_allowed %} disabled{% endif %}>{% include 'partials/button_content.html' with icon='signout' label='Time Out' only %}</button>
+<button type="button" id="excusedOutBtn" class="action-button" aria-pressed="false"{% if not timing.excused_time_out_allowed %} hidden disabled{% endif %}>{% include 'partials/button_content.html' with icon='shield' label='Excused Time Out' only %}</button>
+</div>
+<p id="scan-timing-message" class="scanner-timing-message" role="status">{{ timing.message }}</p>
+{# The QR reader library mounts its camera display here. #}
+<div id="reader"></div>
+<div id="result" class="scan-result">Scan a student's QR for {% if timing.time_in_allowed %}Time In{% else %}Time Out{% endif %}.</div>
+</div>
+
+<div class="card">
+<h2>Rules</h2>
+<ul>
+<li>IN records arrival.</li>
+<li>OUT requires a valid IN for the selected day.</li>
+<li>Time Out opens five minutes before the session ends. An administrator can approve an earlier window.</li>
+<li>For an emergency during the session, choose Excused Time Out and scan the student’s QR. Their attendance is marked Excused.</li>
+<li>Students who timed in can still check out after the session ends.</li>
+<li>Duplicate IN is rejected.</li>
+<li>Duplicate OUT is rejected.</li>
+<li>{% if event.attendance_day_count > 1 %}The program’s stamps are awarded after both scans on all {{ event.attendance_day_count }} days.{% else %}The event’s stamps are awarded after Time In and Time Out.{% endif %}</li>
+</ul>
+</div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+{{ timing|json_script:"scanner-timing" }}
+<script src="{% static 'scanner.js' %}" defer></script>
+{% endblock %}

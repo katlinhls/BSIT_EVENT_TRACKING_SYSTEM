@@ -1,0 +1,109 @@
+{# Shared layout for account and event pages. Child templates fill the title, content, and script blocks. #}
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="{% block viewport %}width=device-width, initial-scale=1.0{% endblock %}">
+    <title>{% block title %}BSIT Event Organizer System{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'css/portal-theme.css' %}">
+    <link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+    <script src="{% static 'interface.js' %}" defer></script>
+    {% block extra_head %}{% endblock %}
+    <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+    <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+
+<body class="{% block body_class %}{% endblock %}"{% if request.user.is_authenticated %} data-authenticated{% endif %}>
+    {# Choose dashboard links and the profile shortcut based on the role supplied by Django. #}
+    <nav class="navbar student-navbar legacy-dashboard-header{% if portal_role == 'ORGANIZER' %} organizer-navbar{% endif %}">
+        <a class="nav-brand" href="{% if portal_role == "STUDENT" %}{% url 'stamps:student_dashboard' %}{% elif portal_role == "ORGANIZER" %}{% url 'events:organizer_dashboard' %}{% elif portal_role == "ADMIN" %}{% url 'administration:dashboard' %}{% else %}{% url 'home' %}{% endif %}">{% include 'partials/brand.html' %}</a>
+        {% if portal_role == "STUDENT" %}
+            <button class="action-button action-button--icon student-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="studentNavMenu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="student-nav-links" id="studentNavMenu">
+                <a href="{% url 'stamps:student_dashboard' %}#upcoming-events">UPCOMING EVENTS</a>
+                <a href="{% url 'stamps:student_qr_page' %}">MY QR</a>
+                <a href="{% url 'stamps:student_stamps_page' %}">STAMPS</a>
+                <a href="{% url 'stamps:student_history_page' %}">HISTORY</a>
+            </div>
+            <a class="student-profile-avatar" href="{% url 'accounts:profile' %}" title="Profile" aria-label="Profile">
+                {% if request.user.profile.profile_image %}
+                    <img src="{{ request.user.profile.profile_image.url }}" alt="Profile picture">
+                {% else %}
+                    <span>{{ request.user.profile.display_name|default:request.user.username|slice:":1"|upper }}</span>
+                {% endif %}
+            </a>
+        {% elif portal_role == "ORGANIZER" %}
+            <button class="action-button action-button--icon organizer-menu-toggle student-menu-toggle" type="button" aria-label="Open navigation" aria-expanded="false" aria-controls="organizerNavMenu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="student-nav-links organizer-nav-links" id="organizerNavMenu">
+                <a href="{% url 'events:organizer_dashboard' %}">DASHBOARD</a>
+                <a href="{% url 'events:event_create' %}">CREATE EVENT</a>
+            </div>
+            <a class="student-profile-avatar" href="{% url 'accounts:profile' %}" title="Organizer Profile" aria-label="Organizer Profile">
+                {% if request.user.profile.profile_image %}
+                    <img src="{{ request.user.profile.profile_image.url }}" alt="Organizer profile picture">
+                {% else %}
+                    <span>{{ request.user.profile.display_name|default:request.user.username|slice:":1"|upper }}</span>
+                {% endif %}
+            </a>
+        {% elif portal_role == "ADMIN" %}
+            {% block admin_nav_actions %}
+                <form method="post" action="{% url 'accounts:logout' %}" class="nav-account">
+                    {% csrf_token %}
+                    <button type="submit" class="action-button">{% include 'partials/button_content.html' with icon='signout' label='LOGOUT' only %}</button>
+                </form>
+            {% endblock %}
+        {% endif %}
+    </nav>
+    {% block mobile_navigation %}{% endblock %}
+{# Show messages from the current request above the page content. #}
+    {% include 'partials/feedback.html' %}
+    {% block content %}{% endblock %}
+    {% block scripts %}{% endblock %}
+
+{% if portal_role == "STUDENT" or portal_role == "ORGANIZER" %}
+<script>
+(function () {
+    // Find the mobile menu for the role shown in this header.
+    const toggle = document.querySelector('.student-menu-toggle');
+    const menu = document.getElementById(
+        toggle && toggle.classList.contains('organizer-menu-toggle')
+            ? 'organizerNavMenu'
+            : 'studentNavMenu'
+    );
+    if (!toggle || !menu) return;
+
+    // Keep the menu class and its expanded state in sync when the button is pressed.
+    toggle.addEventListener('click', function () {
+        const open = menu.classList.toggle('is-open');
+        toggle.classList.toggle('is-open', open);
+        toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
+    });
+
+    // Collapse the menu after navigation or a click outside the menu.
+    menu.querySelectorAll('a').forEach(function (link) {
+        link.addEventListener('click', function () {
+            menu.classList.remove('is-open');
+            toggle.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (!toggle.contains(event.target) && !menu.contains(event.target)) {
+            menu.classList.remove('is-open');
+            toggle.classList.remove('is-open');
+            toggle.setAttribute('aria-expanded', 'false');
+        }
+    });
+})();
+</script>
+{% endif %}
+</body>
+</html>

@@ -1,0 +1,44 @@
+{# Layout shared by the dashboards. Each role supplies its own navigation and page content. #}
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>{% block title %}Dashboard{% endblock %} · BSIT Events</title>
+  <link rel="stylesheet" href="{% static 'css/hero-base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/administration.css' %}">
+  {% block extra_head %}{% endblock %}
+  <script src="{% static 'interface.js' %}" defer></script>
+  <link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+  <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+  <link rel="stylesheet" href="{% static 'css/dashboard-navigation.css' %}">
+</head>
+<body class="management dashboard-shell"{% if request.user.is_authenticated %} data-authenticated{% endif %}>
+  <a class="skip-link" href="#management-content">Skip to content</a>
+  <div class="management-layout{% block layout_class %}{% endblock %}">
+    <aside class="management-sidebar">
+      <div class="management-brand">
+        <a href="{% block dashboard_home %}{% url 'accounts:dashboard' %}{% endblock %}" class="brand">
+          {% block dashboard_brand %}{% include 'portal/partials/calendar_brand.html' %}{% endblock %}
+        </a>
+      </div>
+      <div class="management-navigation">
+        <nav class="dashboard-tabs {% block dashboard_navigation_class %}{% endblock %}" aria-label="{% block dashboard_navigation_label %}Dashboard{% endblock %}">
+          {% block dashboard_navigation %}{% include 'portal/partials/navigation_links.html' %}{% endblock %}
+        </nav>
+        {% block dashboard_sidebar_footer %}{% endblock %}
+      </div>
+    </aside>
+    {% block dashboard_profile %}{% endblock %}
+    {# The skip link points here so keyboard users can reach the page content. #}
+    <main id="management-content" class="management-content">
+      {% include 'partials/feedback.html' %}
+      {% block content %}{% endblock %}
+    </main>
+  </div>
+  {# Pages can load extra JavaScript after the dashboard markup. #}
+  {% block scripts %}{% endblock %}
+</body>
+</html>

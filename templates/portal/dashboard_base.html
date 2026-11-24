@@ -1,0 +1,31 @@
+{# Shared sidebar and account bar for the student and organizer workspaces. #}
+{% extends 'partials/dashboard_shell.html' %}
+{% load static %}
+
+{% block layout_class %} portal-dashboard workspace-portal{% endblock %}
+{% block extra_head %}
+  <link rel="stylesheet" href="{% static 'css/dashboards.css' %}">
+  <link rel="stylesheet" href="{% static 'css/workspace.css' %}">
+{% endblock %}
+{% block dashboard_navigation_label %}{{ portal_role|title }} dashboard{% endblock %}
+{% block dashboard_navigation_class %}workspace-sidebar-nav{% endblock %}
+{% block dashboard_navigation %}
+  <span class="workspace-sidebar-label" aria-hidden="true">{{ portal_role|title }} workspace</span>
+  {{ block.super }}
+{% endblock %}
+{% block dashboard_sidebar_footer %}
+  <a class="workspace-sidebar-profile" href="{% url 'accounts:profile' %}">
+    {% include 'portal/partials/avatar.html' %}
+    <span class="workspace-identity"><strong>{{ request.user.profile.display_name }}</strong><span>Profile</span></span>
+  </a>
+{% endblock %}
+{% block dashboard_profile %}
+  <div class="dashboard-profile workspace-topbar">
+    <span class="workspace-topbar-label">{{ portal_role|title }} workspace</span>
+    <a class="action-button action-button--icon workspace-notifications" href="{% url 'accounts:notifications' %}" aria-label="Notifications" title="Notifications">{% include 'partials/icon.html' with name='bell' only %}</a>
+    <a class="workspace-topbar-profile" href="{% url 'accounts:profile' %}" aria-label="Profile settings">
+      {% include 'portal/partials/avatar.html' %}
+      <span class="workspace-identity"><strong>{{ request.user.first_name|default:request.user.profile.display_name }}</strong><span>{{ portal_role|title }}</span></span>
+    </a>
+  </div>
+{% endblock %}

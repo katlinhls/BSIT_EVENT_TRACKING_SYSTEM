@@ -1,0 +1,126 @@
+/* Base colors, text, controls, and branding for landing pages and dashboard layouts. */
+/* Shared values used by the landing page, forms, and dashboard styles. */
+:root {
+  color-scheme: dark;
+  --page: #102a40;
+  --surface: #17364f;
+  --auth-panel: linear-gradient(155deg, #234863, #142f47 70%);
+  --field: #102a41;
+  --border: #466881;
+  --text: #f5f8fd;
+  --muted: #b9ccdc;
+  --accent: #acd2f2;
+  --primary: #376796;
+  --primary-hover: #4377aa;
+  --danger: #ffb7bf;
+  --radius: 16px;
+  --shadow: 0 18px 42px #07162444;
+  --ease: cubic-bezier(.22, .72, .22, 1);
+}
+
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  min-height: 100vh;
+  background: radial-gradient(ellipse at 85% 0%, #234865, var(--page) 65%);
+  color: var(--text);
+  font: 16px/1.6 system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+a { color: var(--accent); text-underline-offset: .2em; }
+a:hover { color: white; }
+h1, h2, h3 { line-height: 1.15; text-wrap: balance; }
+h1 { font-size: clamp(2rem, 4vw, 3.25rem); letter-spacing: -.045em; margin: .45rem 0 1rem; }
+h2 { font-size: 1.45rem; }
+p { color: var(--muted); }
+:focus-visible { outline: 3px solid #b8e0ff; outline-offset: 3px; }
+
+/* Size the SVG icon relative to nearby text and draw it in the current text color. */
+.icon {
+  width: 1.2em;
+  height: 1.2em;
+  flex: none;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+button, .btn, .icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: .55rem;
+  min-height: 44px;
+  padding: .62rem 1rem;
+  border: 1px solid #6792b7;
+  border-radius: 10px;
+  background: var(--primary);
+  color: var(--text);
+  font: inherit;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+}
+button:hover, .btn:hover { background: var(--primary-hover); color: white; }
+.outline, .icon-button { background: #ffffff0b; border-color: var(--border); }
+.outline:hover, .icon-button:hover { background: #ffffff17; color: white; }
+.icon-button { width: 44px; padding: 0; }
+.danger { background: #8c3549; border-color: #c87683; }
+.danger:hover { background: #a34658; }
+.small { min-height: 36px; padding: .35rem .7rem; font-size: .85rem; }
+
+/* Keep the brand mark and name aligned as one item. */
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: .7rem;
+  color: var(--text);
+  font-size: .875rem;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.brand b { color: var(--accent); }
+.brand-mark {
+  display: grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border: 1px solid #b1cee66b;
+  border-radius: 12px;
+  background: #ffffff13;
+  font-size: 1.25rem;
+  letter-spacing: 0;
+}
+.eyebrow { color: var(--accent); font-size: .72rem; font-weight: 800; letter-spacing: .16em; text-transform: uppercase; }
+label { display: block; margin: 1rem 0 .4rem; color: var(--text); font-weight: 650; }
+/* Give form controls consistent size, contrast, and spacing. */
+input, select, textarea {
+  display: block;
+  width: 100%;
+  min-height: 44px;
+  margin-top: 5px;
+  padding: .7rem .85rem;
+  border: 1px solid #587b97;
+  border-radius: 9px;
+  background: var(--field);
+  color: var(--text);
+  font: inherit;
+}
+input[type="checkbox"], input[type="radio"] { display: inline-block; width: auto; min-height: auto; }
+input::placeholder { color: #a5b9cd; }
+.role-icon {
+  display: inline-grid;
+  place-items: center;
+  width: 39px;
+  height: 39px;
+  border-radius: 11px;
+  background: #d2e7fa26;
+  color: #eff8ff;
+  font-size: 1.12rem;
+}
+/* Honor the user's preference for a quieter interface. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; }
+}

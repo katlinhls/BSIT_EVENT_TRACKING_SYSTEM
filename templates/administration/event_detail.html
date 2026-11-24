@@ -1,0 +1,50 @@
+{# Management view of one event with its schedule, attendance totals, and actions. #}
+{% extends 'administration/base.html' %}
+{% block title %}{{ event.name }}{% endblock %}
+{% block extra_head %}{% include 'events/partials/map_assets.html' with show_map=event.has_map_pin only %}{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% url 'administration:events' %}">{% include 'partials/button_content.html' with icon='back' label='Events' only %}</a>
+    <h1>{{ event.name }}</h1>
+    <span class="management-pill {{ event.status|lower }}">{{ event.get_status_display }}</span>
+  </div>
+  <div class="management-actions">
+    {% if not event.is_completed %}
+      <a class="action-button" href="{% url 'administration:event_edit' event.pk %}">{% include 'partials/button_content.html' with icon='edit' label='Edit event' arrow='arrow' only %}</a>
+    {% endif %}
+    {% if can_approve_early_time_out %}
+      <a class="action-button" href="{% url 'administration:approve_early_time_out' event.pk %}">{% include 'partials/button_content.html' with icon='lock' label='Approve early Time Out' only %}</a>
+    {% endif %}
+    <a class="action-button action-button--primary" href="{% url 'administration:attendance_records' event.pk %}">{% include 'partials/button_content.html' with icon='activity' label='View attendance' arrow='arrow' only %}</a>
+  </div>
+</header>
+<div class="management-summary management-detail-grid">
+  <section class="management-panel management-control-panel">
+    {# Display the uploaded event image when one exists. #}
+    {% if event.image %}<img class="management-event-image" src="{{ event.image.url }}" alt="">{% endif %}
+    <h2>Event details</h2>
+    {% if event.description %}<p class="management-event-description">{{ event.description }}</p>{% endif %}
+    <dl class="management-details">
+      <div><dt>Starts</dt><dd>{{ event.starts_at|date:"M j, Y g:i a" }}</dd></div>
+      <div><dt>Ends</dt><dd>{{ event.ends_at|date:"M j, Y g:i a" }}</dd></div>
+      <div><dt>Venue</dt><dd>{{ event.venue }}</dd></div>
+      <div><dt>Organizer</dt><dd>{% if event.organizer %}{{ event.organizer.get_full_name|default:event.organizer.username }}{% else %}Unassigned{% endif %}</dd></div>
+      <div><dt>Stamps per student</dt><dd>{{ event.stamps_per_student }}</dd></div>
+    </dl>
+    {% include 'events/partials/location.html' with event=event only %}
+  </section>
+  {# Group attendance totals and links to export or manage the event. #}
+  <section class="management-panel management-control-panel">
+    <h2>Attendance summary</h2>
+    <dl class="management-details">
+      <div><dt>Checked in</dt><dd>{{ totals.checked_in }}</dd></div>
+      <div><dt>Completed</dt><dd>{{ totals.completed }}</dd></div>
+    </dl>
+    <a class="action-button" href="{% url 'attendance:attendance_export' event.pk %}">{% include 'partials/button_content.html' with icon='download' label='Export Excel' arrow='arrow' only %}</a>
+    {% if not event.is_completed %}
+      <a class="action-button action-button--danger management-delete-link" href="{% url 'administration:event_delete' event.pk %}">{% include 'partials/button_content.html' with icon='trash' label='Delete event' arrow='arrow' only %}</a>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

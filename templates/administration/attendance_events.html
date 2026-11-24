@@ -1,0 +1,25 @@
+{# List events with time-in and completion counts and links to their attendance records. #}
+{% extends 'administration/base.html' %}
+{% block title %}Attendance{% endblock %}
+{% block content %}
+<header class="management-header"><div><h1>Attendance</h1><p>Open an event to review records, make corrections, or export to Excel.</p></div></header>
+<section class="management-panel">
+  <form class="management-filters" method="get" role="search">
+    <label>Search <input type="search" name="q" value="{{ search_term }}" placeholder="Event or venue"></label>
+    <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='search' label='Search' only %}</button>
+  </form>
+  <div class="management-scroll" role="region" aria-label="Event attendance table" tabindex="0">
+    <table class="management-table">
+      <thead><tr><th scope="col">Event</th><th scope="col">Date</th><th scope="col">Checked in</th><th scope="col">Completed</th></tr></thead>
+      <tbody>
+        {# Display the per-event counts that the attendance view calculated. #}
+        {% for event in page_obj %}
+          <tr><td><a class="management-row-link" href="{% url 'administration:attendance_records' event.pk %}">{{ event.name }}</a><small>{{ event.venue }}</small></td>
+            <td>{% include 'events/partials/date_range.html' with event=event only %}</td><td>{{ event.checked_in }}</td><td>{{ event.completed }}</td></tr>
+        {% empty %}<tr><td colspan="4" class="management-empty">No events to display.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include 'administration/partials/pagination.html' %}
+</section>
+{% endblock %}

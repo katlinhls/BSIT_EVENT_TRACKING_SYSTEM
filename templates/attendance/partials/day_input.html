@@ -1,0 +1,6 @@
+{% comment %}Limit the date picker to scheduled attendance days.{% endcomment %}
+<label>
+  Attendance day
+  <input type="date" name="day" min="{{ event.date|date:'Y-m-d' }}"
+    max="{{ event.last_attendance_date|date:'Y-m-d' }}" value="{{ selected_day|date:'Y-m-d' }}"{% if required %} required{% endif %}>
+</label>

@@ -1,0 +1,176 @@
+/* Desktop keeps its sidebar. The same links become the fixed tabs on phones and tablets. */
+.dashboard-mobile-only, .dashboard-tabs .dashboard-mobile-only { display: none; }
+.dashboard-brand-group { align-items: center; gap: inherit; }
+.dashboard-brand-group.dashboard-desktop-only { display: inline-flex; }
+.dashboard-tabs { min-width: 0; }
+
+@media (max-width: 1024px) {
+  .dashboard-shell, .dashboard-page {
+    --dashboard-tab-height: 56px;
+    --dashboard-bar-bottom: calc(var(--dashboard-tab-height) + env(safe-area-inset-bottom, 0px));
+    --dashboard-header-height: calc(59px + env(safe-area-inset-top, 0px));
+    --dashboard-gutter: clamp(.9rem, 5vw, 1.4rem);
+    --dashboard-nav-surface: var(--palette-rail);
+    --dashboard-nav-border: var(--palette-line);
+    --dashboard-nav-active: #224761;
+  }
+
+  html:has(.dashboard-shell, .dashboard-page) {
+    scroll-padding-top: calc(59px + env(safe-area-inset-top, 0px) + .6rem);
+    scroll-padding-bottom: calc(56px + env(safe-area-inset-bottom, 0px) + .65rem);
+  }
+
+  .dashboard-tabs .dashboard-mobile-only { display: inline; }
+  .dashboard-tabs .action-icon.dashboard-mobile-only { display: inline-grid; }
+  .dashboard-tabs .dashboard-desktop-only, .dashboard-brand-group.dashboard-desktop-only { display: none; }
+  .dashboard-brand-group.dashboard-mobile-only { display: inline-flex; }
+
+  /* The tab strip remains usable with no script and follows phone safe areas. */
+  nav.dashboard-tabs {
+    position: fixed;
+    z-index: 1000;
+    inset: auto 0 0;
+    display: flex;
+    align-items: stretch;
+    gap: clamp(.2rem, 1.2vw, .6rem);
+    height: var(--dashboard-bar-bottom);
+    margin: 0;
+    padding: 5px max(.35rem, env(safe-area-inset-right, 0px)) calc(5px + env(safe-area-inset-bottom, 0px)) max(.35rem, env(safe-area-inset-left, 0px));
+    border-top: 1px solid var(--dashboard-nav-border);
+    background: var(--dashboard-nav-surface);
+  }
+  .dashboard-tabs a.action-button {
+    display: flex;
+    flex: 1 1 0;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: .27rem;
+    min-width: 0;
+    min-height: 44px;
+    padding: .25rem .12rem;
+    border-radius: 9px;
+    background: transparent;
+    color: var(--palette-muted);
+    font-size: clamp(.61rem, 2.8vw, .73rem);
+    font-weight: 620;
+    line-height: 1.05;
+    text-align: center;
+    white-space: normal;
+  }
+  .dashboard-tabs a.action-button:hover { background: var(--palette-inset); color: var(--palette-text); }
+  .dashboard-tabs a.action-button[aria-current="page"] {
+    background: var(--dashboard-nav-active);
+    color: var(--palette-text);
+  }
+  .dashboard-tabs a.action-button:focus-visible { outline-offset: -2px; }
+  .dashboard-tabs .action-icon .icon { width: 16px; height: 16px; }
+  .dashboard-tabs a[aria-current="page"] .action-icon { color: var(--palette-cyan); }
+
+  /* The wordmark and account avatar share the top bar, with the tabs below the page. */
+  .dashboard-shell .management-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: var(--dashboard-header-height) 1fr;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .dashboard-shell .management-sidebar, .dashboard-shell .management-navigation { display: contents; }
+  .dashboard-shell .management-brand {
+    position: sticky;
+    z-index: 40;
+    top: 0;
+    grid-area: 1 / 1;
+    min-width: 0;
+    padding: env(safe-area-inset-top, 0px) 0 0 max(var(--dashboard-gutter), env(safe-area-inset-left, 0px));
+    border-bottom: 1px solid var(--dashboard-nav-border);
+    background: var(--dashboard-nav-surface);
+  }
+  .dashboard-shell .management-brand .brand, .dashboard-page-header .brand { font-size: .98rem; letter-spacing: 0; }
+  .dashboard-shell .brand-mark, .dashboard-page .dashboard-page-header .brand-mark {
+    width: 31px;
+    height: 31px;
+    border: 0;
+    border-radius: 8px;
+    background: var(--palette-cyan);
+    color: #081a2e;
+    font-size: .85rem;
+  }
+  .dashboard-shell .management-navigation nav { margin: 0; }
+  .dashboard-shell .workspace-sidebar-label,
+  .dashboard-shell .workspace-sidebar-profile,
+  .dashboard-shell .management-session,
+  .dashboard-shell .workspace-notifications { display: none; }
+  .dashboard-shell :is(.workspace-topbar, .dashboard-admin-profile) {
+    position: sticky;
+    z-index: 41;
+    top: 0;
+    grid-area: 1 / 2;
+    display: flex;
+    align-items: center;
+    padding: env(safe-area-inset-top, 0px) max(var(--dashboard-gutter), env(safe-area-inset-right, 0px)) 0 .55rem;
+    border-bottom: 1px solid var(--dashboard-nav-border);
+    background: var(--dashboard-nav-surface);
+  }
+  .dashboard-shell .management-content {
+    grid-area: 2 / 1 / 3 / -1;
+    min-width: 0;
+    padding-top: 1.6rem;
+    padding-inline: max(var(--dashboard-gutter), env(safe-area-inset-left, 0px)) max(var(--dashboard-gutter), env(safe-area-inset-right, 0px));
+    padding-bottom: calc(var(--dashboard-bar-bottom) + 1.45rem);
+  }
+  .dashboard-shell .workspace-portal {
+    background-image: none;
+  }
+
+  /* Account and event screens share the phone navigation while keeping their page layouts. */
+  .dashboard-page .legacy-dashboard-header { display: none; }
+  body.dashboard-page { padding-bottom: calc(var(--dashboard-bar-bottom) + .85rem); }
+  .dashboard-page-header.dashboard-mobile-only {
+    position: sticky;
+    z-index: 40;
+    top: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+    min-height: var(--dashboard-header-height);
+    padding: env(safe-area-inset-top, 0px) max(var(--dashboard-gutter), env(safe-area-inset-right, 0px)) 0 max(var(--dashboard-gutter), env(safe-area-inset-left, 0px));
+    border-bottom: 1px solid var(--dashboard-nav-border);
+    background: var(--dashboard-nav-surface);
+  }
+  .dashboard-page-header .brand { display: inline-flex; align-items: center; gap: .65rem; color: var(--palette-text); text-decoration: none; }
+  .dashboard-page-avatar, .dashboard-admin-account .dashboard-avatar {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 36px;
+    height: 36px;
+    overflow: hidden;
+    border-radius: 50%;
+    background: var(--dashboard-nav-active);
+    color: var(--palette-pale-blue);
+    font-size: .75rem;
+    font-weight: 750;
+    text-decoration: none;
+  }
+  .dashboard-page-avatar .dashboard-avatar { display: grid; place-items: center; width: 100%; height: 100%; }
+  .dashboard-page-avatar img, .dashboard-admin-account img { width: 100%; height: 100%; object-fit: cover; }
+  .dashboard-page nav.dashboard-tabs { margin: 0; }
+
+  .dashboard-admin-account summary { display: grid; cursor: pointer; list-style: none; }
+  .dashboard-admin-account summary::-webkit-details-marker { display: none; }
+  .dashboard-account-menu {
+    position: absolute;
+    top: calc(100% + .4rem);
+    right: max(var(--dashboard-gutter), env(safe-area-inset-right, 0px));
+    min-width: 10rem;
+    max-width: min(17rem, 85vw);
+    padding: .75rem;
+    border: 1px solid var(--dashboard-nav-border);
+    border-radius: 10px;
+    background: var(--palette-panel);
+    overflow-wrap: anywhere;
+  }
+  .dashboard-account-menu form { margin-top: .3rem; }
+}

@@ -1,0 +1,141 @@
+/* Shared navy surfaces and accent colors for the landing, account, and dashboard pages. */
+:root {
+  --palette-canvas: #0d1d30;
+  --palette-rail: #0b1729;
+  --palette-panel: #142b43;
+  --palette-inset: #102338;
+  --palette-line: #32516c;
+  --palette-field-line: #52728b;
+  --palette-text: #f1f7ff;
+  --palette-muted: #b3cadf;
+  --palette-cyan: #86ddf9;
+  --palette-violet: #c7b8ff;
+  --palette-mint: #9ae8cc;
+  --palette-amber: #ffd08f;
+  --palette-rose: #ffbad0;
+  --palette-pale-blue: #b8e7f9;
+  --palette-primary: #315b9a;
+  --palette-primary-hover: #3c67aa;
+  --palette-background: radial-gradient(ellipse at 92% 0%, #343c6d62, transparent 56%),
+    radial-gradient(ellipse at 12% 6%, #1d658040, transparent 55%), var(--palette-canvas);
+
+  /* Expose the same values under both sets of names used by the project styles. */
+  --page: var(--palette-canvas);
+  --surface: var(--palette-panel);
+  --field: var(--palette-inset);
+  --auth-panel: linear-gradient(155deg, #214358, var(--palette-panel) 58%);
+  --bg-main: var(--palette-canvas);
+  --bg-secondary: var(--palette-panel);
+  --glass: #1b344d;
+  --glass-light: #284762;
+  --glass-hover: #325473;
+  --border: var(--palette-line);
+  --border-light: var(--palette-field-line);
+  --text: var(--palette-text);
+  --text-soft: var(--palette-muted);
+  --muted: var(--palette-muted);
+  --accent: var(--palette-cyan);
+  --blue: var(--accent);
+  --primary: var(--palette-primary);
+  --primary-hover: var(--palette-primary-hover);
+  --blue-dark: var(--primary);
+  --danger: var(--palette-rose);
+  --success: var(--palette-mint);
+}
+
+body, body.profile-settings-ui { background: var(--palette-background); }
+.navbar { border-color: var(--palette-line); background: var(--palette-rail); }
+.auth-card, .registration-card, .organizer-profile-card { background: var(--palette-panel); }
+.auth-card .theme-icon, .registration-heading-icon, .brand-mark {
+  border-color: #47849b;
+  background: #224761;
+  color: var(--palette-cyan);
+}
+.profile-photo, .student-profile-avatar, .management-avatar {
+  background: #244962;
+  color: var(--palette-pale-blue);
+}
+.profile-details-field input { border-color: var(--border-light); background: var(--field); }
+.profile-details-field input:disabled { background: var(--glass); }
+.profile-details-field input[aria-invalid="true"] { border-color: var(--danger); }
+
+/* Accent colors mark common buttons and status without changing their shape or size. */
+.action-button--primary, .action-button[aria-pressed="true"] {
+  --action-surface: var(--primary);
+  --action-hover: var(--primary-hover);
+}
+:is(a, button, label).action-button:focus-visible, :focus-visible {
+  outline-color: var(--palette-cyan);
+}
+.feedback-dialog, .feedback-stack .feedback-notice { background: var(--palette-panel); }
+.feedback-dialog { border-color: var(--palette-field-line); }
+.feedback-notice[data-level="success"] { --notice-accent: var(--palette-mint); }
+.feedback-notice[data-level="error"] { --notice-accent: var(--palette-rose); }
+.feedback-notice[data-level="warning"] { --notice-accent: var(--palette-amber); }
+.reset-complete-card .theme-icon { border-color: #519a90; background: #1b4545; color: var(--success); }
+
+/* The landing page pairs the student cyan with organizer violet on the same navy backdrop. */
+.landing { background: var(--palette-canvas); }
+.landing-art {
+  background:
+    repeating-linear-gradient(90deg, transparent 0 49px, #94b9d40c 50px 51px),
+    repeating-linear-gradient(0deg, transparent 0 49px, #94b9d40c 50px 51px),
+    radial-gradient(ellipse at 73% 33%, #2c8b9980, transparent 49%),
+    radial-gradient(ellipse at 100% 87%, #6956ad7a, transparent 53%),
+    linear-gradient(122deg, #101c33, #1a314c 59%, #142b43);
+}
+.hero h1 span { color: var(--palette-cyan); }
+.orbit-field::before { border-color: #91ecf04a; }
+.orbit-field::after { border-color: #c7b8ff4d; }
+.role-actions [data-open-panel="student"] {
+  --action-border: 1px solid #5c91ad;
+  --action-surface: #245571;
+  --action-tile: #39768f;
+  --action-hover: #2d6988;
+}
+.role-actions [data-open-panel="organizer"] {
+  --action-border: 1px solid #746da0;
+  --action-surface: #34345e;
+  --action-tile: #514b85;
+  --action-hover: #484477;
+}
+.login-panel[data-role="organizer"] {
+  --auth-panel: linear-gradient(153deg, #37335c, var(--palette-panel) 65%);
+  --accent: var(--palette-violet);
+  --primary: #555092;
+  --primary-hover: #6459a7;
+}
+.login-panel .panel-icon { color: var(--accent); }
+
+/* Use violet and mint where the forms already separate academic and security details. */
+.registration-section:nth-of-type(2) legend { color: var(--palette-violet); }
+.registration-section:nth-of-type(3) legend { color: var(--palette-mint); }
+
+.management {
+  --management-canvas: var(--palette-canvas);
+  --management-panel: var(--palette-panel);
+  --management-line: var(--palette-line);
+  --management-blue: var(--palette-cyan);
+  --management-teal: var(--palette-mint);
+  --management-amber: var(--palette-amber);
+  --management-rose: var(--palette-rose);
+  background: var(--palette-background);
+}
+.management-layout:not(.workspace-portal) .management-sidebar { background: var(--palette-rail); }
+.management-metric { --metric-accent: var(--palette-cyan); }
+.management-metric:nth-child(2) { --metric-accent: var(--palette-violet); }
+.management-metric:nth-child(3) { --metric-accent: var(--palette-mint); }
+.management-metric:nth-child(4) { --metric-accent: var(--palette-amber); }
+.management-metric-top .management-tile-icon {
+  background: color-mix(in srgb, var(--metric-accent) 18%, var(--management-panel));
+  color: var(--metric-accent);
+}
+.management-legend i, .management-day-bars i { background: var(--palette-cyan); }
+.management-legend span:last-child i, .management-day-bars i:last-child { background: var(--palette-mint); }
+.management-status-row.completed { --status: var(--palette-violet); }
+.analytics-charts {
+  --analytics-complete: var(--palette-mint);
+  --analytics-pending: var(--palette-amber);
+  --analytics-track: #29455f;
+}
+.analytics-track span { background: linear-gradient(90deg, #abaaef, var(--palette-cyan)); }

@@ -1,0 +1,18 @@
+{# Both QR sizes use the original signed image and its refresh script. #}
+<section class="management-panel dashboard-section student-qr-panel" id="my-qr" aria-labelledby="qr-heading">
+  <div class="management-panel-header"><h2 id="qr-heading">{% include 'partials/icon.html' with name='qr' only %} My attendance QR</h2></div>
+  <div class="dashboard-qr{% if student_section == 'qr' %} dashboard-qr--full{% endif %}">
+    <div class="dashboard-qr-preview" id="qr-preview">
+      <img id="student-qr" src="{% url 'stamps:student_qr' %}" alt="Student attendance QR code" width="352" height="352"{% if student_section == 'overview' %} loading="lazy"{% endif %}>
+      <span class="dashboard-qr-loading" id="qr-loading" hidden>Loading QR…</span>
+    </div>
+    <div class="dashboard-qr-copy">
+      <p>Show this code to the event organizer.</p>
+      <p class="dashboard-qr-timer">Refreshes in <strong id="countdown">25s</strong></p>
+      <p id="qr-error" class="dashboard-qr-error" role="status" hidden>Unable to load the QR code. Retrying…</p>
+      {% if student_section == 'overview' %}
+        <a class="action-button workspace-secondary" href="{% url 'stamps:student_qr_page' %}">{% include 'partials/button_content.html' with icon='qr' label='Open full QR' only %}</a>
+      {% endif %}
+    </div>
+  </div>
+</section>

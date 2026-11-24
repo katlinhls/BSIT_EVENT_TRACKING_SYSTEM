@@ -1,0 +1,42 @@
+{# The student view uses the live event, schedule, map pin, and attendance award. #}
+{% extends 'stamps/base.html' %}
+{% block title %}{{ event.name }}{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  {% include 'events/partials/map_assets.html' with show_map=event.has_map_pin only %}
+{% endblock %}
+{% block content %}
+  <a class="action-button workspace-back" href="{% url 'stamps:student_dashboard' %}">{% include 'partials/button_content.html' with icon='back' label='Back' only %}</a>
+  <header class="management-header workspace-page-heading">
+    <div><h1>{{ event.name }}</h1><p>{% include 'events/partials/date_range.html' with event=event only %}{% if event.venue %} · {{ event.venue }}{% endif %}</p></div>
+  </header>
+  <div class="student-detail-cover">{% include 'stamps/partials/event_cover.html' with event=event only %}</div>
+  <div class="student-detail-grid">
+    <section class="management-panel student-detail-panel" aria-labelledby="event-program">
+      <h2 id="event-program">{% include 'partials/icon.html' with name='organizer' only %} Program details</h2>
+      {% include 'stamps/partials/event_statuses.html' with event=event checked_in_event_ids=checked_in_event_ids only %}
+      {% if event.description %}<p class="management-event-description">{{ event.description }}</p>{% endif %}
+      <dl class="management-details">
+        <div><dt>{% if event.attendance_day_count > 1 %}Daily schedule{% else %}Schedule{% endif %}</dt><dd>{{ event.start_time|time:"g:i A" }} – {{ event.end_time|time:"g:i A" }}{% if event.attendance_overnight %}<small>Ends the next day</small>{% endif %}</dd></div>
+        <div><dt>Stamp award</dt><dd>{% if event.stamps_per_student %}{{ event.stamps_per_student }} stamp{{ event.stamps_per_student|pluralize }}{% if event.attendance_day_count > 1 %} after all {{ event.attendance_day_count }} days{% endif %}{% else %}No stamps for this event{% endif %}</dd></div>
+      </dl>
+      {% if event.status == 'UPCOMING' or event.status == 'ONGOING' %}
+        <div class="student-detail-footer">
+          {% if event.attendance_day_count > 1 %}<p>Record a Time In and a Time Out each day.</p>{% endif %}
+          <a class="action-button action-button--primary workspace-primary" href="{% url 'stamps:student_qr_page' %}">{% include 'partials/button_content.html' with icon='qr' label='Open my QR' only %}</a>
+        </div>
+      {% endif %}
+    </section>
+    {% if event.venue or event.has_map_pin %}
+      <section class="management-panel student-detail-panel student-venue-panel" aria-labelledby="event-venue">
+        <h2 id="event-venue">{% include 'partials/icon.html' with name='pin' only %} Venue</h2>
+        {# The illustrated preview also covers places without a saved map pin. #}
+        <figure class="student-venue-preview">
+          <span class="student-venue-pin">{% include 'partials/icon.html' with name='pin' only %}</span>
+          {% if event.venue %}<figcaption>{{ event.venue }}</figcaption>{% endif %}
+        </figure>
+        {% include 'events/partials/location.html' with event=event link_label='Open map' only %}
+      </section>
+    {% endif %}
+  </div>
+{% endblock %}

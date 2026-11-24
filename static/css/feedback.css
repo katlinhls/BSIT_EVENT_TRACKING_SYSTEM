@@ -1,0 +1,69 @@
+/* Short-lived status notices displayed above the page content. */
+/* Center the notices at the top and allow clicks to pass through the notice area. */
+.feedback-stack {
+  position: fixed;
+  z-index: 1500;
+  inset: max(.7rem, env(safe-area-inset-top, 0px)) 0 auto;
+  width: max-content;
+  max-width: min(25rem, calc(100% - 1.5rem));
+  height: auto;
+  margin: 0 auto;
+  padding: 0;
+  overflow: visible;
+  border: 0;
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Hide the stack when the notice timer is finished. */
+.feedback-stack[hidden] {
+  display: none;
+}
+
+.feedback-stack::backdrop {
+  background: transparent;
+  pointer-events: none;
+}
+
+/* Use a colored edge, readable text, and a short entry animation for each notice. */
+.feedback-stack .feedback-notice {
+  --notice-accent: #a6ccee;
+  margin: 0;
+  padding: .53rem .82rem;
+  overflow-wrap: anywhere;
+  border: 1px solid #4b708d;
+  border-inline-start: .23rem solid var(--notice-accent);
+  border-radius: 10px;
+  background: #18364f;
+  box-shadow: 0 8px 26px #06121e70;
+  color: #f3f8fd;
+  font: 600 .875rem/1.42 system-ui, -apple-system, "Segoe UI", sans-serif;
+  text-align: start;
+  animation: feedback-enter .18s ease-out;
+}
+
+.feedback-stack .feedback-notice + .feedback-notice {
+  margin-top: .4rem;
+}
+
+/* Use different accent colors for success, error, and warning levels. */
+.feedback-notice[data-level="success"] {
+  --notice-accent: #8bd8ca;
+}
+
+.feedback-notice[data-level="error"] {
+  --notice-accent: #ffadb9;
+}
+
+.feedback-notice[data-level="warning"] {
+  --notice-accent: #efc98c;
+}
+
+@keyframes feedback-enter {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .feedback-stack .feedback-notice { animation: none; }
+}

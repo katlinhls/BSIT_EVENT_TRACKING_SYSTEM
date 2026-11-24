@@ -1,0 +1,188 @@
+/* Organizer overview, event lists, and inbox in the shared workspace. */
+.organizer-portal { --workspace-sidebar-width: clamp(190px, 15.5vw, 216px); }
+.organizer-page-heading .organizer-create-link { min-width: min(100%, 180px); }
+.organizer-page-heading .organizer-mark-read { min-width: min(100%, 192px); }
+.organizer-portal .organizer-overview { gap: 1.25rem; }
+.organizer-metrics { gap: .9rem; margin-bottom: 0; }
+.organizer-portal .organizer-metric {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: .3rem .55rem;
+  min-height: 111px;
+  border-radius: 16px;
+  padding: .95rem 1rem 1.15rem;
+}
+.organizer-metric-label { align-self: start; margin-top: .1rem; font-size: .85rem; }
+.organizer-metric strong { grid-column: 1; margin: 0; font-size: clamp(1.55rem, 3vw, 2rem); }
+.organizer-metric-icon {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: var(--workspace-blue-bg);
+  color: var(--workspace-cyan);
+  font-size: .86rem;
+}
+.organizer-metric.mint .organizer-metric-icon { background: var(--workspace-mint-bg); color: var(--workspace-mint); }
+.organizer-metric.violet .organizer-metric-icon { background: var(--workspace-violet-bg); color: var(--workspace-violet); }
+
+.organizer-reminders, .organizer-notices { display: grid; gap: 1.15rem; }
+.organizer-reminder {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: .6rem .95rem;
+  min-height: 72px;
+  padding: .7rem 1.1rem;
+  border-radius: 12px;
+  background: var(--workspace-blue-bg);
+}
+.organizer-reminder > .icon { color: var(--palette-pale-blue); }
+.organizer-reminder :is(strong, h2) { color: var(--workspace-text); font-size: .86rem; font-weight: 680; }
+.organizer-reminder p { margin: .24rem 0 0; color: var(--workspace-muted); font-size: .81rem; overflow-wrap: anywhere; }
+.organizer-reminder .organizer-extend-link { --action-height: 38px; --action-size: .82rem; min-width: 145px; }
+
+.organizer-panel-title, .organizer-event-table h2, .organizer-portal .attendance-analytics--compact h3 {
+  display: flex;
+  align-items: center;
+  gap: .6rem;
+  font-size: 1.2rem;
+  font-weight: 690;
+}
+.organizer-panel-title > .icon, .organizer-event-table h2 > .icon, .attendance-analytics--compact h3 > .icon {
+  color: var(--workspace-cyan);
+  font-size: .85rem;
+}
+
+/* Keep the overview charts compact while exposing the existing event filter. */
+.organizer-portal .attendance-analytics--compact { margin: 0; scroll-margin-top: 4.7rem; }
+.organizer-portal .attendance-analytics--compact .analytics-charts {
+  --analytics-complete: var(--workspace-mint);
+  --analytics-pending: var(--palette-pale-blue);
+  --analytics-track: var(--workspace-blue-bg);
+  grid-template-columns: minmax(0, 1fr);
+  align-items: stretch;
+  gap: .9rem;
+}
+.organizer-portal .attendance-analytics--compact .analytics-panel { padding: 1.14rem 1.23rem 1.35rem; }
+.attendance-analytics--compact .analytics-panel-title {
+  display: flex;
+  align-items: start;
+  justify-content: space-between;
+  gap: .55rem;
+  flex-wrap: wrap;
+}
+.attendance-analytics--compact .analytics-breakdown {
+  display: grid;
+  grid-template-columns: minmax(6rem, 9.55rem) minmax(0, 1fr);
+  align-items: center;
+  gap: clamp(.7rem, 2vw, 1.75rem);
+  margin-top: 1.3rem;
+}
+.organizer-portal .attendance-analytics--compact .analytics-ring { width: 100%; margin: 0; padding: .88rem; }
+.organizer-portal .attendance-analytics--compact .analytics-ring[data-has-scans] {
+  background: conic-gradient(var(--analytics-complete) 0 var(--completion), var(--analytics-track) var(--completion) 100%);
+}
+.attendance-analytics--compact .analytics-ring-label { text-align: center; }
+.organizer-portal .attendance-analytics--compact .analytics-key { gap: .9rem; margin: 0; font-size: .82rem; }
+.organizer-portal .attendance-analytics--compact .analytics-key div { display: grid; gap: .18rem; }
+.attendance-analytics--compact .analytics-key dd { padding-inline-start: 1.15rem; }
+.organizer-analytics-filter { min-width: 0; color: var(--workspace-muted); font-size: .76rem; }
+.organizer-analytics-filter summary { width: fit-content; margin-inline-start: auto; padding: .15rem; cursor: pointer; }
+.organizer-analytics-filter summary:hover { color: var(--workspace-cyan); }
+.organizer-analytics-filter[open] { flex: 1 1 100%; }
+.organizer-analytics-filter .analytics-filter { margin-top: .3rem; }
+.organizer-analytics-filter .analytics-filter-controls { justify-content: flex-start; }
+.attendance-analytics--compact .analytics-chart-note { margin-top: .75rem; }
+.organizer-portal .attendance-analytics--compact .analytics-bars { gap: .95rem; margin-top: .9rem; }
+.attendance-analytics--compact .analytics-bars li {
+  display: grid;
+  position: relative;
+  grid-template-columns: minmax(3.45rem, 6rem) minmax(0, 1fr) minmax(2.6rem, auto);
+  gap: .52rem;
+  align-items: center;
+}
+.organizer-portal .attendance-analytics--compact .analytics-bar-label { display: contents; }
+.attendance-analytics--compact .analytics-bar-label strong {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: .82rem;
+  font-weight: 650;
+  overflow-wrap: anywhere;
+}
+.attendance-analytics--compact .analytics-bar-label > span { grid-column: 3; grid-row: 1; text-align: end; }
+.organizer-portal .attendance-analytics--compact .analytics-track { grid-column: 2; grid-row: 1; height: .38rem; }
+.organizer-portal .attendance-analytics--compact .analytics-track span { background: var(--workspace-cyan); }
+.organizer-portal .attendance-analytics--compact .analytics-bars li:nth-child(even) .analytics-track span { background: var(--workspace-mint); }
+
+.organizer-event-table .management-panel-header { padding: 1.1rem 1.25rem .85rem; }
+.organizer-event-table .management-scroll { border-radius: 0 0 16px 16px; }
+.organizer-event-table .management-table { font-size: .82rem; }
+.organizer-portal .organizer-event-table .management-table th {
+  padding: .72rem 1.14rem;
+  border-color: var(--workspace-divider);
+  background: var(--workspace-inset);
+  color: var(--workspace-muted);
+  font-size: .72rem;
+}
+.organizer-portal .organizer-event-table .management-table td {
+  padding: .44rem 1.14rem;
+  border-color: var(--workspace-divider);
+  color: var(--workspace-muted);
+  overflow-wrap: anywhere;
+}
+.organizer-event-table .management-table tbody tr:hover { background: #1b3650; }
+.organizer-event-table .management-table .dashboard-table-main { width: 28%; }
+.organizer-event-table .management-table small { display: block; margin-top: .15rem; color: var(--workspace-muted); }
+.organizer-event-link, .organizer-notice-meta a { color: var(--workspace-cyan); font-weight: 650; text-decoration: none; }
+.organizer-event-link:hover, .organizer-notice-meta a:hover { color: var(--workspace-text); text-decoration: underline; }
+.organizer-event-table .management-pill {
+  min-width: 4.35rem;
+  justify-content: center;
+  padding: .24rem .57rem;
+  border: 0;
+  font-size: .71rem;
+  line-height: 1.3;
+}
+.organizer-event-table .management-pill.upcoming { background: var(--workspace-blue-bg); color: var(--palette-pale-blue); }
+.organizer-event-table .management-pill:is(.ongoing, .completed) { background: var(--workspace-mint-bg); color: var(--workspace-mint); }
+
+.organizer-pending { margin-top: 2.35rem; padding: 1.15rem 1.25rem 1.5rem; }
+.organizer-pending-list, .organizer-notices { margin: 0; padding: 0; list-style: none; }
+.organizer-pending-list { margin-top: 1.05rem; }
+.organizer-pending-list li + li { border-top: 1px solid var(--workspace-divider); margin-top: 1rem; padding-top: .8rem; }
+.organizer-pending-list .management-actions { margin-top: 1.2rem; }
+.organizer-pending-list .workspace-primary { min-width: min(100%, 180px); }
+
+.organizer-notice { padding: 1.2rem 1.25rem 1.55rem; }
+.organizer-portal .organizer-notice p { margin-top: .95rem; white-space: pre-line; overflow-wrap: anywhere; }
+.organizer-notice-meta { display: flex; flex-wrap: wrap; gap: .55rem 1rem; margin-top: 1rem; color: var(--workspace-dim); font-size: .8rem; }
+.organizer-unread {
+  display: inline-block;
+  margin-inline-start: .55rem;
+  padding: .14rem .48rem;
+  border-radius: 999px;
+  background: var(--workspace-mint-bg);
+  color: var(--workspace-mint);
+  font-size: .68rem;
+  vertical-align: middle;
+}
+
+@media (min-width: 980px) {
+  .organizer-portal .attendance-analytics--compact .analytics-charts { grid-template-columns: minmax(0, 1fr) minmax(0, 1.68fr); }
+}
+@media (max-width: 700px) {
+  .organizer-portal .organizer-metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .65rem; }
+  .organizer-portal .organizer-event-table .management-table td { padding: 0; }
+  .organizer-event-table .management-table .dashboard-table-main { width: auto; }
+  .organizer-reminder { grid-template-columns: auto minmax(0, 1fr); }
+  .organizer-reminder .organizer-extend-link { grid-column: 2; justify-self: start; }
+}
+@media (max-width: 570px) {
+  .organizer-page-heading :is(.organizer-create-link, form, .organizer-mark-read) { width: 100%; }
+}
+@media (max-width: 345px) {
+  .attendance-analytics--compact .analytics-breakdown { grid-template-columns: minmax(0, 1fr); justify-items: center; }
+  .organizer-portal .attendance-analytics--compact .analytics-ring { max-width: 9rem; }
+}

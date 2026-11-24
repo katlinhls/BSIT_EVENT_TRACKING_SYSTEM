@@ -1,0 +1,11 @@
+{# Render a single management form field, including a checkbox layout and validation feedback. #}
+<div class="management-field{% if field.field.widget.input_type == 'checkbox' %} management-check-field{% endif %}">
+  {% if field.field.widget.input_type == 'checkbox' %}
+    {{ field }} {{ field.label_tag }}
+  {% else %}
+    {{ field.label_tag }} {{ field }}
+  {% endif %}
+  {# Pair the help text and errors with the field they describe. #}
+  {% if field.help_text %}<div id="{{ field.auto_id }}_helptext" class="management-help">{{ field.help_text }}</div>{% endif %}
+  {% if field.errors %}<div class="management-form-errors" role="alert">{{ field.errors }}</div>{% endif %}
+</div>

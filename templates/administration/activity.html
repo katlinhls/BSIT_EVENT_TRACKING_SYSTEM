@@ -1,0 +1,42 @@
+{# Review the activity log and the before and after details of attendance corrections. #}
+{% extends 'administration/base.html' %}
+{% block title %}Activity log{% endblock %}
+{% block content %}
+<header class="management-header"><div><h1>Activity log</h1><p>Review administrator and organizer actions.</p></div></header>
+<section class="management-panel">
+  {# Filter the displayed activity by search text and action type. #}
+  <form class="management-filters" method="get" role="search">
+    <label>Search <input type="search" name="q" value="{{ search_term }}" placeholder="Account, event, or reason"></label>
+    <label>Action <select name="action"><option value="">All actions</option>
+      {% for code, label in actions %}<option value="{{ code }}"{% if action_filter == code %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select></label>
+    <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='filter' label='Apply filters' only %}</button>
+  </form>
+  <div class="management-scroll" role="region" aria-label="Activity log table" tabindex="0">
+    <table class="management-table">
+      <thead><tr><th scope="col">Action</th><th scope="col">Account</th><th scope="col">Date and time</th><th scope="col">Details</th></tr></thead>
+      <tbody>
+        {% for log in page_obj %}
+          <tr>
+            <td><strong>{{ log.get_action_display }}</strong></td>
+            <td>{{ log.actor_username }}</td>
+            <td>{{ log.created_at|date:"M j, Y g:i:s a" }}</td>
+            <td>
+              <strong>{{ log.subject }}</strong>
+              {% if log.details %}<small>{{ log.details }}</small>{% endif %}
+              {% for change in log.attendance_changes %}
+                {% if change.is_timestamp %}
+                  <small>{{ change.label }} · {{ change.before|date:"M j, Y g:i:s a"|default:"—" }} → {{ change.after|date:"M j, Y g:i:s a"|default:"—" }}</small>
+                {% else %}
+                  <small>{{ change.label }} · {{ change.before|default:"—" }} → {{ change.after|default:"—" }}</small>
+                {% endif %}
+              {% endfor %}
+            </td>
+          </tr>
+        {% empty %}<tr><td colspan="4" class="management-empty">No activity matches these filters.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include 'administration/partials/pagination.html' %}
+</section>
+{% endblock %}

@@ -1,0 +1,10 @@
+{# Offer access to the scanner when the event can still record attendance. #}
+{% url 'attendance:scanner' event.pk as scanner_url %}
+{% if can_finish_time_out %}
+    <a class="action-button" href="{{ scanner_url }}{% if scanner_day %}?day={{ scanner_day|date:'Y-m-d' }}{% endif %}">{% include 'partials/button_content.html' with icon='qr' label='Finish Time Out' only %}</a>
+{% elif event.status == "UPCOMING" or event.status == "ONGOING" %}
+    <a class="action-button" href="{{ scanner_url }}{% if scanner_day %}?day={{ scanner_day|date:'Y-m-d' }}{% endif %}">{% include 'partials/button_content.html' with icon='back' label='Back to Scanner' only %}</a>
+{% else %}
+    <a class="action-button" href="{% url 'events:event_detail' event.pk %}">{% include 'partials/button_content.html' with icon='back' label='Back to Event' only %}</a>
+{% endif %}
+<a class="action-button action-button--primary" href="{% url 'attendance:attendance_export' event.pk %}">{% include 'partials/button_content.html' with icon='download' label='Export Excel' arrow='arrow' only %}</a>

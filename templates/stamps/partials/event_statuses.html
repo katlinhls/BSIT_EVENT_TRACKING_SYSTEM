@@ -1,0 +1,9 @@
+{# Show the event status alongside the student's own attendance status. #}
+<div class="student-event-statuses" aria-live="polite">
+  <span class="management-pill {{ event.status|lower }}">{{ event.get_status_display }}</span>
+  <span class="management-pill in" data-live-student-event="{{ event.pk }}"
+        data-student-attendance-url="{% url 'stamps:student_attendance_status' %}"
+        {% if event.pk not in checked_in_event_ids %}hidden{% endif %}>
+    <span class="visually-hidden">Attendance status </span>In
+  </span>
+</div>

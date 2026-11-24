@@ -1,0 +1,14 @@
+{# Collect Django messages, form errors, and one-off notices for the feedback script. #}
+<div class="feedback-stack" data-feedback-stack{% if not messages and not feedback_errors and not feedback_text %} hidden{% endif %}>
+  {# Use Django's message level to choose the notice style. #}
+  {% for message in messages %}
+    {% include 'partials/feedback_notice.html' with text=message level=message.level_tag only %}
+  {% endfor %}
+  {# Forms can pass their validation errors to the same display. #}
+  {% for error in feedback_errors %}
+    {% include 'partials/feedback_notice.html' with text=error level='error' only %}
+  {% endfor %}
+  {% if feedback_text %}
+    {% include 'partials/feedback_notice.html' with text=feedback_text level=feedback_level only %}
+  {% endif %}
+</div>

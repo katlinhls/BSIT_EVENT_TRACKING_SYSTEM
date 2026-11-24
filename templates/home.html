@@ -1,0 +1,43 @@
+{# Public landing page with sign-in panels for students and organizers. #}
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% if login_role %}{{ login_role|title }} Login · {% endif %}BSIT Events</title>
+  <link rel="stylesheet" href="{% static 'css/hero-base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+  <script src="{% static 'interface.js' %}" defer></script>
+  <link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+  <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+<body class="landing" data-panel="{{ login_role|default:''|lower }}">
+  <div class="landing-art" aria-hidden="true"><div class="orbit-field"></div></div>
+  <main class="hero">
+    <div class="brand">{% include 'partials/brand.html' %}</div>
+    <div class="hero-copy">
+      <p class="eyebrow">Bachelor of Science in Information Technology</p>
+      <h1>Every event.<br><span>One connected</span><br>experience.</h1>
+      <p class="hero-description">Welcome to the BSIT Event Organizer System. Choose your account type to continue.</p>
+      {# Each link can open its matching sign-in dialog or navigate to the sign-in URL. #}
+      <div class="role-actions">
+        <a class="action-button action-button--choice action-button--primary" href="{% url 'accounts:student_login' %}" data-open-panel="student" aria-haspopup="dialog">
+          {% include 'partials/button_content.html' with icon='student' label='Student Login' description='View events and stamps' arrow='arrow' only %}
+        </a>
+        <a class="action-button action-button--choice" href="{% url 'accounts:organizer_login' %}" data-open-panel="organizer" aria-haspopup="dialog">
+          {% include 'partials/button_content.html' with icon='organizer' label='Organizer Login' description='Manage event attendance' arrow='arrow' only %}
+        </a>
+      </div>
+    </div>
+    <footer class="hero-footer">
+      <span>Plan · Organize · Participate</span>
+    </footer>
+  </main>
+  {# Pass the role and sign-in route to each copy of the reusable dialog. #}
+  {% include 'partials/login_panel.html' with panel_role='student' login_url_name='accounts:student_login' panel_title='Student Login' panel_icon='student' initial_role=login_role|lower %}
+  {% include 'partials/login_panel.html' with panel_role='organizer' login_url_name='accounts:organizer_login' panel_title='Organizer Login' panel_icon='organizer' initial_role=login_role|lower %}
+  {% if not login_role %}{% include 'partials/feedback.html' %}{% endif %}
+</body>
+</html>

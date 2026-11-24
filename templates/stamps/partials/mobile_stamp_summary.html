@@ -1,0 +1,13 @@
+{# On phones, keep the overview brief and link to the full stamp card. #}
+<section class="management-panel student-stamp-summary dashboard-mobile-only" aria-labelledby="stamp-summary-heading">
+  <h2 id="stamp-summary-heading">
+    {% include 'partials/icon.html' with name='stamp' only %}
+    {% if stamps_earned > stamp_slots|length %}
+      <span>{{ stamps_earned }} stamps earned</span>
+    {% else %}
+      <span>{{ stamps_earned }} of {{ stamp_slots|length }} stamps earned</span>
+    {% endif %}
+  </h2>
+  <p>Earn stamps by completing both scans each event day.</p>
+  <a href="{% url 'stamps:student_stamps_page' %}">View my stamps</a>
+</section>

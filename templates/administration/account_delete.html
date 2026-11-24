@@ -1,0 +1,24 @@
+{# Show what deleting this account affects before accepting a confirmation. #}
+{% extends 'administration/base.html' %}
+{% block title %}Delete account{% endblock %}
+{% block content %}
+<header class="management-header">
+  <h1>Delete account</h1>
+</header>
+<section class="management-panel management-control-panel" aria-labelledby="account-to-delete">
+  <h2 id="account-to-delete">{{ account.username }}</h2>
+  <p>This permanently deletes the {{ account.profile.get_role_display|lower }} account, its profile, and its notifications.</p>
+  {% if attendance_count or stamp_count %}
+    <p>It also removes {{ attendance_count }} attendance record{{ attendance_count|pluralize }} and {{ stamp_count }} earned stamp{{ stamp_count|pluralize }}.</p>
+  {% endif %}
+  {% if event_count %}
+    <p>This clears the organizer assignment on {{ event_count }} event{{ event_count|pluralize }}.</p>
+  {% endif %}
+  {# Deletion requires a POST with Django's CSRF token. #}
+  <form class="management-actions" method="post">
+    {% csrf_token %}
+    <a class="action-button" href="{% url 'administration:account_detail' account.pk %}">{% include 'partials/button_content.html' with icon='back' label='Cancel' only %}</a>
+    <button class="action-button action-button--danger" type="submit">{% include 'partials/button_content.html' with icon='trash' label='Delete account' only %}</button>
+  </form>
+</section>
+{% endblock %}

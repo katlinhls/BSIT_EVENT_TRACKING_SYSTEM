@@ -1,0 +1,41 @@
+{# Search, filter, and open the accounts available to the signed-in administrator. #}
+{% extends 'administration/base.html' %}
+{% block title %}Accounts{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div><h1>Accounts</h1><p>Manage account access.</p></div>
+  <a class="action-button action-button--primary" href="{% url 'administration:account_create' %}">{% include 'partials/button_content.html' with icon='user-plus' label='Create account' arrow='arrow' only %}</a>
+</header>
+<section class="management-panel">
+  {# Put search and filter values in the URL so they can be reused while paging. #}
+  <form class="management-filters" method="get" role="search">
+    <label>Search <input type="search" name="q" value="{{ search_term }}" placeholder="Name, School ID, or email"></label>
+    <label>Role <select name="role"><option value="">All roles</option>
+      {% for role in roles %}
+        <option value="{{ role }}"{% if role_filter == role %} selected{% endif %}>{{ role.label }}</option>
+      {% endfor %}
+    </select></label>
+    <label>Status <select name="status"><option value="">All statuses</option>
+      <option value="active"{% if status_filter == 'active' %} selected{% endif %}>Active</option>
+      <option value="inactive"{% if status_filter == 'inactive' %} selected{% endif %}>Inactive</option>
+    </select></label>
+    <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='filter' label='Apply filters' only %}</button>
+  </form>
+  <div class="management-scroll" role="region" aria-label="Accounts table" tabindex="0">
+    <table class="management-table">
+      <thead><tr><th scope="col">Name</th><th scope="col">Username</th><th scope="col">Role</th><th scope="col">Status</th></tr></thead>
+      <tbody>
+        {# Show the accounts from the page selected by the view. #}
+        {% for account in page_obj %}
+          <tr class="management-clickable-row">
+            <td><a class="management-row-link" href="{% url 'administration:account_detail' account.pk %}">{{ account.get_full_name|default:account.username }}</a>{% if account.email %}<small>{{ account.email }}</small>{% endif %}</td>
+            <td>{{ account.username }}</td><td>{{ account.profile.get_role_display }}</td>
+            <td><span class="management-pill {% if account.is_active %}ongoing{% else %}cancelled{% endif %}">{{ account.is_active|yesno:"Active,Inactive" }}</span></td>
+          </tr>
+        {% empty %}<tr><td colspan="4" class="management-empty">No accounts match these filters.</td></tr>{% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% include 'administration/partials/pagination.html' %}
+</section>
+{% endblock %}

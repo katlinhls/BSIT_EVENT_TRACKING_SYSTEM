@@ -1,0 +1,11 @@
+{# Show the student and both recorded times for each row on the current page. #}
+{% for record in page_obj %}
+  <tr>
+    <td><strong>{{ record.student.display_name }}</strong><small>{{ record.student.student_id|default:record.student.user.username }}</small></td>
+    {% if event.attendance_day_count > 1 %}<td>{{ record.attendance_date|date:"M j, Y" }}</td>{% endif %}
+    <td>{{ record.in_at|date:"M j, Y g:i:s a"|default:"—" }}</td><td>{{ record.out_at|date:"M j, Y g:i:s a"|default:"—" }}</td>
+    <td><span class="management-pill {{ record.status|lower }}">{{ record.status|title }}</span></td>
+    {% if event.attendance_day_count > 1 %}<td>{{ record.days_completed }} of {{ event.attendance_day_count }}</td>{% endif %}
+    <td><a class="action-button action-button--compact" href="{% url 'administration:attendance_correct' event.pk record.pk %}{% if selected_day %}?day={{ selected_day|date:'Y-m-d' }}{% endif %}" aria-label="Correct attendance for {{ record.student.display_name }}">{% include 'partials/button_content.html' with icon='edit' label='Correct' only %}</a></td>
+  </tr>
+{% empty %}<tr><td colspan="{% if event.attendance_day_count > 1 %}7{% else %}5{% endif %}" class="management-empty">No attendance records to display.</td></tr>{% endfor %}

@@ -1,0 +1,165 @@
+/* Theme values and shared visual styles for account pages and required password dialogs. */
+/* Reuse these colors across account pages, borders, and interactive controls. */
+:root {
+    --bg-main: #102a40;
+    --bg-secondary: #17364f;
+    --glass: #1c3c57;
+    --glass-light: #284c69;
+    --glass-hover: #305674;
+    --border: #466881;
+    --border-light: #6689a4;
+    --text: #f5f8fd;
+    --text-soft: #b9ccdc;
+    --blue: #acd2f2;
+    --blue-dark: #376796;
+}
+body {
+    background: radial-gradient(ellipse at 85% 0%, #234865, var(--bg-main) 65%) fixed;
+}
+/* Keep a visible keyboard focus ring on interactive controls. */
+:focus-visible {
+    outline: 3px solid #b8e0ff;
+    outline-offset: 3px;
+}
+.student-navbar .nav-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: .7rem;
+    color: var(--text);
+    font-size: .875rem;
+    font-weight: 800;
+    letter-spacing: .14em;
+    white-space: nowrap;
+}
+/* Equal columns on both sides keep the organizer links centered in the header. */
+@media (width > 900px) {
+    .navbar.organizer-navbar {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+    }
+    .organizer-navbar .nav-brand { justify-self: start; }
+    .navbar.organizer-navbar .organizer-nav-links { justify-content: center; }
+    .organizer-navbar .student-profile-avatar { justify-self: end; }
+}
+.nav-brand b { color: var(--blue); }
+.brand-mark, .theme-icon {
+    display: inline-grid;
+    flex: none;
+    place-items: center;
+    width: 39px;
+    height: 39px;
+    border: 1px solid #b1cee66b;
+    border-radius: 12px;
+    background: #ffffff13;
+    color: var(--text);
+    font-size: 1.25rem;
+    letter-spacing: 0;
+}
+.icon {
+    width: 1.2em;
+    height: 1.2em;
+    flex: none;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+.auth-card, .registration-reference-card, .organizer-profile-card {
+    border-color: var(--border);
+    background: linear-gradient(145deg, #1d405c, var(--bg-secondary));
+}
+.auth-card .auth-error { color: #ffc1c9; }
+
+/* Center the reset confirmation across the full viewport. */
+.reset-complete-page .navbar { display: none; }
+.reset-complete-page .auth-container {
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: 1rem;
+}
+.auth-card.reset-complete-card {
+    max-width: 34rem;
+    padding: clamp(1.75rem, 5vw, 3.25rem);
+    text-align: center;
+}
+.reset-complete-card .theme-icon {
+    width: 3.85rem;
+    height: 3.85rem;
+    border-color: #519a90;
+    border-radius: 50%;
+    background: #153f48;
+    color: #9fe6d2;
+    font-size: 1.65rem;
+}
+.reset-complete-card h1 {
+    margin: 1rem 0 .6rem;
+    font-size: clamp(1.6rem, 5vw, 2.15rem);
+    line-height: 1.2;
+}
+.reset-complete-card p {
+    margin: 0;
+    color: var(--text-soft);
+}
+.reset-complete-countdown {
+    display: inline-grid;
+    justify-items: center;
+    min-width: 5.25rem;
+    margin-top: 1.15rem;
+    padding: .65rem .85rem;
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    background: var(--bg-main);
+    color: var(--text-soft);
+    font-size: .82rem;
+    line-height: 1.2;
+}
+#reset-countdown-seconds {
+    color: var(--text);
+    font-size: 2.65rem;
+    font-weight: 750;
+    font-variant-numeric: tabular-nums;
+}
+@media (prefers-reduced-motion: reduce) {
+    .reset-complete-card { animation: none; }
+}
+
+/* Style dialogs with a bounded width and height so they fit small screens. */
+.feedback-dialog {
+    position: fixed;
+    inset: 1rem 0 auto;
+    width: min(480px, calc(100% - 2rem));
+    max-height: calc(100dvh - 2rem);
+    margin: 0 auto;
+    padding: 0;
+    border: 1px solid #688eac;
+    border-radius: 16px;
+    background: #193951;
+    color: var(--text);
+    box-shadow: 0 24px 65px #051421a0;
+}
+.feedback-dialog::backdrop { background: #07182bbb; }
+.feedback-content { padding: clamp(1.2rem, 4vw, 2rem); }
+.feedback-content h2 { margin: .7rem 0 .5rem; line-height: 1.2; }
+.feedback-content p { color: var(--text-soft); margin: .5rem 0 1rem; }
+.feedback-content .theme-icon { margin-bottom: .85rem; }
+.feedback-content .forced-password-eyebrow { display: block; }
+/* Center the required password dialog and allow it to scroll if needed. */
+.password-dialog { inset: 0; margin: auto; width: min(550px, calc(100% - 2rem)); overflow: auto; }
+.feedback-dialog .btn-primary { background: var(--blue-dark); color: var(--text); }
+
+.portal-notices { display: grid; gap: .75rem; list-style: none; padding: 0; }
+.portal-notices h2 { font-size: 1.1rem; margin-top: 0; }
+.portal-notices .badge { margin-left: .35rem; }
+.registration-password { position: relative; }
+.registration-password input { padding-inline-end: 4.5rem; }
+.registration-password button {
+    position: absolute;
+    inset: 0 .5rem 0 auto;
+    min-width: 3.3rem;
+    background: transparent;
+    border: 0;
+    color: var(--blue);
+    font: inherit;
+    cursor: pointer;
+}

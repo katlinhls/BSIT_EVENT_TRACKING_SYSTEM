@@ -1,0 +1,16 @@
+{# Organizer pages share the same navigation, account bar, and responsive shell. #}
+{% extends 'portal/dashboard_base.html' %}
+{% load static %}
+
+{% block layout_class %}{{ block.super }} organizer-portal{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/organizer-desktop.css' %}">
+{% endblock %}
+{% block dashboard_home %}{% url 'events:organizer_dashboard' %}{% endblock %}
+{% block scripts %}
+  {% if refresh_after_ms %}
+    {{ refresh_after_ms|json_script:"organizer-event-refresh" }}
+    <script src="{% static 'organizer-schedule.js' %}" defer></script>
+  {% endif %}
+{% endblock %}

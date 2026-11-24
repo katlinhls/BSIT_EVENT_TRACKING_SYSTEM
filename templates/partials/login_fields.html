@@ -1,0 +1,5 @@
+{# Reuse the credentials fields in both role dialogs and label the student identifier as School ID. #}
+<label for="{{ account_role }}-username">{% if account_role == 'student' %}School ID{% else %}Username{% endif %}</label>
+<input id="{{ account_role }}-username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" {% if login_role|lower == account_role %}value="{{ login_username|default:'' }}"{% endif %} required>
+<label for="{{ account_role }}-password">Password</label>
+<input id="{{ account_role }}-password" name="password" type="password" autocomplete="current-password" required>

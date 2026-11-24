@@ -1,0 +1,33 @@
+{# The overview preview and My Events use the same live event rows. #}
+<section class="management-panel dashboard-section organizer-event-table" id="my-events" aria-labelledby="my-events-heading">
+  <div class="management-panel-header">
+    <h2 id="my-events-heading">{% include 'partials/icon.html' with name='organizer' only %} My events</h2>
+    {% if has_more_events %}<a href="{% url 'events:organizer_events' %}">View all events {% include 'partials/icon.html' with name='arrow' only %}</a>{% endif %}
+  </div>
+  {% if events %}
+    <div class="management-scroll" role="region" aria-label="My events table" tabindex="0">
+      <table class="management-table dashboard-table">
+        <thead><tr><th scope="col">Event</th><th scope="col">Daily schedule</th><th scope="col">Venue</th><th scope="col">Status</th><th scope="col">Action</th></tr></thead>
+        <tbody>
+          {% for event in events %}
+            <tr>
+              <td class="dashboard-table-main">
+                <a class="management-row-link" href="{% url 'events:event_detail' event.pk %}">{{ event.name }}</a>
+                <small>{% include 'events/partials/date_range.html' with event=event compact=True show_year=True only %}</small>
+              </td>
+              <td data-label="Daily schedule">
+                {{ event.start_time|time:"g:i A" }} – {{ event.end_time|time:"g:i A" }}
+                {% if event.attendance_overnight %}<small>Ends the next day</small>{% endif %}
+              </td>
+              <td data-label="Venue">{{ event.venue }}</td>
+              <td data-label="Status"><span class="management-pill {{ event.status|lower }}">{{ event.get_status_display }}</span></td>
+              <td data-label="Action"><a class="organizer-event-link" href="{% url 'events:event_detail' event.pk %}" aria-label="View event: {{ event.name }}">View event</a></td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="dashboard-empty">No events yet. Create an event to start managing attendance.</p>
+  {% endif %}
+</section>

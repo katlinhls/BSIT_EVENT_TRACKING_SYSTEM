@@ -1,0 +1,37 @@
+<section class="management-panel dashboard-section student-history" id="event-history" aria-labelledby="history-heading">
+  <div class="management-panel-header"><h2 id="history-heading">{% include 'partials/icon.html' with name='activity' only %} Event history</h2></div>
+  {% if event_history %}
+    <div class="management-scroll" role="region" aria-label="Event history table" tabindex="0">
+      <table class="management-table dashboard-table">
+        <thead><tr><th scope="col">Event</th><th scope="col">Last day</th><th scope="col">Completed</th><th scope="col">Status</th><th scope="col">Details</th></tr></thead>
+        <tbody>
+          {% for item in event_history %}
+            <tr>
+              <td class="dashboard-table-main">
+                <a class="management-row-link" href="{% url 'events:event_detail' item.event.pk %}">{{ item.event.name }}</a>
+                <small>{% include 'events/partials/date_range.html' with event=item.event only %}</small>
+              </td>
+              <td data-label="Last day">{{ item.event.last_attendance_date|date:"M j" }}</td>
+              <td data-label="Completed" aria-label="{{ item.completed_days }} of {{ item.event.attendance_day_count }} day{{ item.event.attendance_day_count|pluralize }} completed">{{ item.completed_days }} of {{ item.event.attendance_day_count }} day{{ item.event.attendance_day_count|pluralize }}</td>
+              <td data-label="Status"><span class="management-pill {% if item.status == 'ATTENDED' %}completed{% elif item.status == 'EXCUSED' %}excused{% elif item.status == 'IN ONLY' or item.status == 'INCOMPLETE' %}in{% else %}cancelled{% endif %}">{{ item.status|title }}</span></td>
+              <td class="student-history-detail" data-label="Details">
+                {% if item.daily_records %}
+                  <details class="dashboard-attendance-days">
+                    <summary>{% if item.event.attendance_day_count > 1 %}View days{% else %}View scans{% endif %}<span class="visually-hidden"> for {{ item.event.name }}</span></summary>
+                    <ul>
+                      {% for record in item.daily_records %}
+                        <li><strong>{{ record.attendance_date|date:"M j, Y" }}</strong><span>In {{ record.in_at|time:"g:i A"|default:"—" }} · Out {{ record.out_at|time:"g:i A"|default:"—" }}</span><span>{{ record.status|title }}</span></li>
+                      {% endfor %}
+                    </ul>
+                  </details>
+                {% else %}<span aria-label="No recorded scans">—</span>{% endif %}
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p class="dashboard-empty">No event history yet.</p>
+  {% endif %}
+</section>

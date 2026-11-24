@@ -1,0 +1,32 @@
+{# Show the details of one event, including its schedule and organizer tools when permitted. #}
+{% extends "portal/section_base.html" %}
+{% block title %}{{ event.name }}{% endblock %}
+{% block extra_head %}{{ block.super }}{% include 'events/partials/map_assets.html' with show_map=event.has_map_pin only %}{% endblock %}
+{% block content %}
+<div class="card">
+    {% if event.image %}<img class="hero-image" src="{{ event.image.url }}" alt="{{ event.name }}">{% endif %}
+    <span class="badge">{{ event.status }}</span>
+    <h1>{{ event.name }}</h1>
+    <p>{{ event.description }}</p>
+    <div class="details">
+        <div><b>Starts</b><br>{{ event.starts_at|date:"M j, Y g:i a" }}</div>
+        <div><b>Ends</b><br>{{ event.ends_at|date:"M j, Y g:i a" }}</div>
+        <div><b>Venue</b><br>{{ event.venue }}</div>
+        <div><b>Organizer</b><br>{% if event.organizer %}{{ event.organizer.get_full_name|default:event.organizer.username }}{% else %}Unassigned{% endif %}</div>
+        <div><b>Stamps per student</b><br>{{ event.stamps_per_student }}</div>
+    </div>
+    {% include 'events/partials/location.html' with event=event only %}
+{# Offer management links when the view confirms the organizer is assigned to this event. #}
+    {% if can_manage_event %}
+        {% if not event.is_completed %}
+            <a class="action-button" href="{% url 'events:event_edit' event.pk %}">{% include 'partials/button_content.html' with icon='edit' label='Edit Event' arrow='arrow' only %}</a>
+        {% endif %}
+        {% if can_finish_time_out %}
+            <a class="action-button action-button--primary" href="{% url 'attendance:scanner' event.pk %}">{% include 'partials/button_content.html' with icon='qr' label='Finish Time Out' arrow='arrow' only %}</a>
+        {% elif event.status == "UPCOMING" or event.status == "ONGOING" %}
+            <a class="action-button action-button--primary" href="{% url 'attendance:scanner' event.pk %}">{% include 'partials/button_content.html' with icon='qr' label='Open Scanner' arrow='arrow' only %}</a>
+        {% endif %}
+        <a class="action-button" href="{% url 'attendance:attendance_list' event.pk %}">{% include 'partials/button_content.html' with icon='activity' label='Attendance List' arrow='arrow' only %}</a>
+    {% endif %}
+</div>
+{% endblock %}

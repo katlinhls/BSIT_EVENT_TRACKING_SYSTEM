@@ -1,0 +1,15 @@
+{% load l10n %}
+{% with maps_url=event.google_maps_url %}
+  {% if maps_url %}
+    <div class="event-location-view">
+      {% if event.has_map_pin %}
+        <div class="event-location-map" data-event-location-preview
+             data-latitude="{{ event.latitude|unlocalize }}" data-longitude="{{ event.longitude|unlocalize }}"
+             role="region" aria-label="Event venue map" hidden></div>
+      {% endif %}
+      <a class="action-button action-button--compact" href="{{ maps_url }}" target="_blank" rel="noopener noreferrer">
+        {% include 'partials/button_content.html' with icon='pin' label=link_label|default:'Open in Google Maps' only %}
+      </a>
+    </div>
+  {% endif %}
+{% endwith %}

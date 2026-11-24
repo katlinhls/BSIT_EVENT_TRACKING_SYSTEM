@@ -1,0 +1,29 @@
+{# Search for a place, choose a map pin, and submit hidden coordinates with the event form. #}
+<div class="event-location-panel">
+  {{ form.latitude }}
+  {{ form.longitude }}
+  {% if form.latitude.errors or form.longitude.errors %}
+    <p class="management-form-errors" role="alert">The map pin is invalid. Choose a location again or clear the pin.</p>
+  {% endif %}
+  <div class="event-location-search" data-location-search hidden>
+    <label for="event-venue-search">{{ search_label|default:"Place name or address" }}</label>
+    <div class="event-location-query">
+      <input id="event-venue-search" type="search" maxlength="200" autocomplete="off" placeholder="e.g. Lucena City Hall">
+      <button class="action-button action-button--compact{% if icon_search %} action-button--icon{% else %} action-button--primary{% endif %}"
+              type="button" data-search-location{% if icon_search %} aria-label="Search locations"{% endif %}>
+        {% if icon_search %}{% include 'partials/icon.html' with name='search' only %}{% else %}Search{% endif %}
+      </button>
+    </div>
+    <p class="event-location-status" role="status" data-search-status></p>
+    <ul class="event-location-results" aria-label="Matching locations" data-location-results hidden></ul>
+    <small class="event-location-credit">Search data &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener">OpenStreetMap contributors</a></small>
+  </div>
+  <div class="event-location-actions" data-location-actions hidden>
+    <button class="action-button action-button--compact" type="button" data-use-current-location>
+      {% include 'partials/button_content.html' with icon='pin' label='Use current location' only %}
+    </button>
+    <button class="action-button action-button--compact" type="button" data-clear-location>Clear pin</button>
+  </div>
+  <p class="event-location-status" role="status" data-location-status>Enable JavaScript to choose a map location.</p>
+  <div class="event-location-map" data-location-map role="region" aria-label="Choose the event venue on the map" hidden></div>
+</div>

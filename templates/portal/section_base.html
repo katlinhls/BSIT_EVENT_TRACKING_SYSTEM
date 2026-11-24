@@ -1,0 +1,21 @@
+{# Account and event pages use the same phone tabs as their dashboard. #}
+{% extends 'base.html' %}
+{% load static %}
+
+{% block viewport %}{{ block.super }}{% if portal_role == 'STUDENT' or portal_role == 'ORGANIZER' %}, viewport-fit=cover{% endif %}{% endblock %}
+{% block body_class %}{{ block.super }}{% if portal_role == 'STUDENT' or portal_role == 'ORGANIZER' %} dashboard-page{% endif %}{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/dashboard-navigation.css' %}">
+{% endblock %}
+{% block mobile_navigation %}
+  {% if portal_role == 'STUDENT' or portal_role == 'ORGANIZER' %}
+    <header class="dashboard-page-header dashboard-mobile-only">
+      <a class="brand" href="{% url 'accounts:dashboard' %}">{% include 'portal/partials/calendar_brand.html' %}</a>
+      <a class="dashboard-page-avatar" href="{% url 'accounts:profile' %}" aria-label="Profile settings">{% include 'portal/partials/avatar.html' %}</a>
+    </header>
+    <nav class="dashboard-tabs dashboard-mobile-only" aria-label="{{ portal_role|title }} dashboard">
+      {% include 'portal/partials/navigation_links.html' %}
+    </nav>
+  {% endif %}
+{% endblock %}

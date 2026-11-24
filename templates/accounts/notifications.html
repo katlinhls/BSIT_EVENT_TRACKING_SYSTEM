@@ -1,0 +1,34 @@
+{# Display the signed-in user's inbox and its read state. #}
+{% extends "portal/section_base.html" %}
+{% block title %}Notifications{% endblock %}
+{% block content %}
+<main class="event-form-page">
+    <div class="page-heading">
+        <div><h1>Notifications</h1><a class="action-button action-button--compact" href="{% url 'accounts:profile' %}">{% include 'partials/button_content.html' with icon='back' label='Back to profile' only %}</a></div>
+        {% if page_obj.paginator.count %}
+        {# Submitting this form marks the user's notices as read. #}
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='check' label='Mark all as read' only %}</button>
+        </form>
+        {% endif %}
+    </div>
+    <ul class="portal-notices">
+        {# Render the notices on the current page. #}
+        {% for notification in page_obj %}
+            <li class="card">
+                <h2>{{ notification.subject }} {% if not notification.is_read %}<span class="badge">New</span>{% endif %}</h2>
+                <p>{{ notification.body }}</p>
+                {% if notification.event_id %}
+                    <p><a class="action-button action-button--compact" href="{% url 'events:event_detail' notification.event_id %}">View event</a></p>
+                {% endif %}
+                <small>{{ notification.created_at|date:"M j, Y g:i a" }}</small>
+            </li>
+        {% empty %}
+            <li class="card">You have no notifications yet.</li>
+        {% endfor %}
+    </ul>
+    {% if page_obj.has_previous %}<a class="action-button action-button--compact" href="{% querystring page=page_obj.previous_page_number %}">{% include 'partials/button_content.html' with icon='back' label='Previous' only %}</a>{% endif %}
+    {% if page_obj.has_next %}<a class="action-button action-button--compact" href="{% querystring page=page_obj.next_page_number %}">{% include 'partials/button_content.html' with icon='arrow' label='Next' only %}</a>{% endif %}
+</main>
+{% endblock %}

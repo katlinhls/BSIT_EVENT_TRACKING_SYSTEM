@@ -1,0 +1,38 @@
+{# List assigned events and preserve direct links to pending checkouts by day. #}
+{% extends 'events/organizer_base.html' %}
+{% block title %}My events{% endblock %}
+
+{% block content %}
+  <header class="management-header workspace-page-heading organizer-page-heading">
+    <div><h1>My events</h1><p>Open an event to start scanning or review attendance.</p></div>
+    {% include 'events/partials/create_event_link.html' %}
+  </header>
+
+  {% include 'events/partials/organizer_event_table.html' with events=events only %}
+  <section class="management-panel organizer-pending" aria-labelledby="pending-checkouts">
+    <h2 class="organizer-panel-title" id="pending-checkouts">{% include 'partials/icon.html' with name='clock' only %} Pending Time Outs</h2>
+    {% if pending_checkouts %}
+      <ul class="organizer-pending-list">
+        {% for pair in pending_checkouts %}
+          <li>
+            <p>{{ pair.event.name }} · {{ pair.day|date:"M j" }} · {{ pair.student_count }} student{{ pair.student_count|pluralize }} still need{{ pair.student_count|pluralize:"s," }} to time out.</p>
+            <div class="management-actions">
+              <a class="action-button action-button--primary workspace-primary" href="{% url 'attendance:scanner' pair.event.pk %}?day={{ pair.day|date:'Y-m-d' }}">
+                {% include 'partials/button_content.html' with icon='qr' label='Finish Time Out' only %}
+              </a>
+              <a class="action-button workspace-secondary" href="{% url 'events:event_detail' pair.event.pk %}">
+                {% if pair.event.status == 'COMPLETED' %}
+                  {% include 'partials/button_content.html' with icon='organizer' label='View completed event' only %}
+                {% else %}
+                  {% include 'partials/button_content.html' with icon='organizer' label='View event' only %}
+                {% endif %}
+              </a>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p>No pending Time Outs for finished sessions.</p>
+    {% endif %}
+  </section>
+{% endblock %}

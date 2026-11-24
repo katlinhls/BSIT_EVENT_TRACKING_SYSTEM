@@ -1,0 +1,63 @@
+{# The desktop overview and focused tabs use the same QR, stamp, and history components. #}
+{% extends 'stamps/base.html' %}
+{% load static %}
+{% block title %}{% if student_section == 'qr' %}My QR{% elif student_section == 'stamps' %}My stamps{% elif student_section == 'history' %}Event history{% else %}Student dashboard{% endif %}{% endblock %}
+
+{% block content %}
+{% if student_section == 'qr' %}
+  <a class="action-button workspace-back" href="{% url 'stamps:student_dashboard' %}">{% include 'partials/button_content.html' with icon='back' label='Back' only %}</a>
+  <header class="management-header workspace-page-heading"><div><h1>My QR</h1><p>Use your QR for Time In and Time Out.</p></div></header>
+  <div class="student-qr-layout">
+    {% include 'stamps/partials/qr_panel.html' %}
+    {% if active_event %}
+      <section class="management-panel student-active-event" aria-labelledby="active-event-heading">
+        <h2 id="active-event-heading">{% include 'partials/icon.html' with name='organizer' only %} Active event</h2>
+        {% include 'stamps/partials/event_statuses.html' with event=active_event checked_in_event_ids=checked_in_event_ids only %}
+        <h3>{{ active_event.name }}</h3>
+        <p>{% if active_event.attendance_day_count > 1 %}Day {{ active_day_number }} · {% endif %}{{ active_day|date:"M j, Y" }}</p>
+        <a href="{% url 'events:event_detail' active_event.pk %}">Open event details</a>
+      </section>
+    {% endif %}
+  </div>
+{% elif student_section == 'stamps' %}
+  <header class="management-header workspace-page-heading"><div><h1>My stamps</h1><p>Your attendance rewards</p></div></header>
+  <div class="dashboard-sections">
+    {% include 'stamps/partials/stamp_card.html' %}
+    {% include 'stamps/partials/history.html' %}
+  </div>
+{% elif student_section == 'history' %}
+  <header class="management-header workspace-page-heading"><div><h1>Event history</h1><p>Review completed events and daily attendance.</p></div></header>
+  {% include 'stamps/partials/history.html' %}
+{% else %}
+  <header class="management-header workspace-page-heading student-overview-heading">
+    <div><h1>Student dashboard</h1><p>Welcome, {{ profile.display_name }}{% if profile.program or profile.year_level %} · {% if profile.program %}{{ profile.program }}{% endif %}{% if profile.program and profile.year_level %} {% endif %}{% if profile.year_level %}{{ profile.year_level }}{% endif %}{% endif %}</p></div>
+    <a class="action-button action-button--primary workspace-primary" href="{% url 'stamps:student_qr_page' %}">{% include 'partials/button_content.html' with icon='qr' label='Open my QR' only %}</a>
+  </header>
+  <div class="dashboard-sections student-overview-content">
+    <section class="management-panel student-current-time-ins" aria-labelledby="current-time-ins-heading"
+             data-live-student-time-ins
+             data-student-attendance-url="{% url 'stamps:student_attendance_status' %}?include_time_ins=1">
+      <header class="management-panel-header">
+        <h2 id="current-time-ins-heading">{% include 'partials/icon.html' with name='check' only %} Current Time In</h2>
+      </header>
+      <div aria-live="polite" data-attendance-part="current_time_ins">
+        {% include 'stamps/partials/current_time_ins.html' with current_time_ins=current_time_ins only %}
+      </div>
+      <p class="student-time-in-connection" role="status" data-attendance-connection hidden></p>
+    </section>
+    <div class="student-overview-grid">
+      {% include 'stamps/partials/upcoming.html' %}
+      {% include 'stamps/partials/qr_panel.html' %}
+    </div>
+    {% include 'stamps/partials/stamp_card.html' %}
+    {% include 'stamps/partials/history.html' %}
+    {% include 'stamps/partials/mobile_stamp_summary.html' %}
+  </div>
+{% endif %}
+{% endblock %}
+{% block scripts %}
+  {% if student_section == 'overview' or student_section == 'qr' %}
+    {{ block.super }}
+    <script src="{% static 'student-qr.js' %}" defer></script>
+  {% endif %}
+{% endblock %}

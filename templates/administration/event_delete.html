@@ -1,0 +1,20 @@
+{# Confirm deletion and show the number of attendance records and stamps tied to the event. #}
+{% extends 'administration/base.html' %}
+{% block title %}Delete event{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% url 'administration:event_detail' event.pk %}">{% include 'partials/button_content.html' with icon='back' label='Event details' only %}</a>
+    <h1>Delete event</h1>
+  </div>
+</header>
+<section class="management-panel management-control-panel">
+  <h2>{{ event.name }}</h2>
+  <p>Deleting this event permanently removes {{ attendance_count }} attendance record{{ attendance_count|pluralize }} and {{ stamp_count }} earned stamp{{ stamp_count|pluralize }}.</p>
+  {# Send a protected POST only when the administrator confirms the deletion. #}
+  <form method="post">
+    {% csrf_token %}
+    <button type="submit" class="action-button action-button--danger">{% include 'partials/button_content.html' with icon='trash' label='Delete event' only %}</button>
+  </form>
+</section>
+{% endblock %}

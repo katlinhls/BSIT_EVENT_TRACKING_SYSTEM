@@ -1,0 +1,21 @@
+{# Use one template for adding an attendance record or correcting an existing one. #}
+{% extends 'administration/base.html' %}
+{% block title %}{% if record %}Correct attendance{% else %}Add attendance{% endif %}{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% url 'administration:attendance_records' event.pk %}">{% include 'partials/button_content.html' with icon='activity' label='Attendance records' only %}</a>
+    <h1>{% if record %}Correct attendance{% else %}Add attendance{% endif %}</h1>
+    <p>{{ event.name }}{% if record %} · {{ record.student.display_name }} · {{ record.attendance_date|date:"M j, Y" }}{% endif %}</p>
+  </div>
+</header>
+<section class="management-panel management-form-panel">
+  <p>Enter times in {{ timezone }}. {% if event.attendance_day_count > 1 %}The program’s stamp award requires both scans on all {{ event.attendance_day_count }} days.{% else %}The stamp award requires both times.{% endif %}</p>
+  {# Submit the edited times and reason. Existing records also carry the form's version value. #}
+  <form method="post"{% if not record %} data-attendance-add-form{% endif %}>
+    {% csrf_token %}
+    <div class="management-form-fields">{% include 'administration/partials/fields.html' %}</div>
+    <div class="management-form-actions"><button type="submit" class="action-button action-button--primary">{% include 'partials/button_content.html' with icon='check' label='Save attendance' arrow='arrow' only %}</button></div>
+  </form>
+</section>
+{% endblock %}

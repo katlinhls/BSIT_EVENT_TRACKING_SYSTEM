@@ -1,0 +1,29 @@
+# Keep the local .env file out of Git because it can contain deployment keys and mail
+# credentials.
+
+# Python
+__pycache__/
+*.py[cod]
+*.log
+
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Django
+staticfiles/
+media/
+
+# Environment variables and secrets
+.env
+.env.*
+
+# IDE
+.vscode/
+
+# Operating system
+.DS_Store
+Thumbs.db
+
+db.sqlite3

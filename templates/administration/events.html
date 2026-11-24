@@ -1,0 +1,21 @@
+{# Filter and page the administrator's event list. #}
+{% extends 'administration/base.html' %}
+{% block title %}Events{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div><h1>Events</h1><p>Review the schedule and manage event details.</p></div>
+  <a class="action-button action-button--primary" href="{% url 'administration:event_create' %}">{% include 'partials/button_content.html' with icon='plus' label='Create event' arrow='arrow' only %}</a>
+</header>
+<section class="management-panel">
+  <form class="management-filters" method="get" role="search">
+    <label>Search <input type="search" name="q" value="{{ search_term }}" placeholder="Event or venue"></label>
+    <label>Status <select name="status"><option value="">All statuses</option>
+      {% for code, label in statuses %}<option value="{{ code }}"{% if status_filter == code %} selected{% endif %}>{{ label }}</option>{% endfor %}
+    </select></label>
+    <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='filter' label='Apply filters' only %}</button>
+  </form>
+  {# Pass the page of events to the table shared with Admin Overview. #}
+  {% include 'administration/partials/event_table.html' with events=page_obj %}
+  {% include 'administration/partials/pagination.html' %}
+</section>
+{% endblock %}

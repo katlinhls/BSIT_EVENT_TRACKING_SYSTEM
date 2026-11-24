@@ -1,0 +1,18 @@
+{# Each role exposes the same routes on the sidebar and the bottom tab bar. #}
+{% if portal_role == 'STUDENT' %}
+  {% include 'portal/partials/nav_link.html' with active=student_section page='overview' target='stamps:student_dashboard' icon='dashboard' mobile_icon='organizer' label='Overview' mobile_label='Events' only %}
+  {% include 'portal/partials/nav_link.html' with active=student_section page='qr' target='stamps:student_qr_page' icon='qr' label='My QR' only %}
+  {% include 'portal/partials/nav_link.html' with active=student_section page='stamps' target='stamps:student_stamps_page' icon='stamp' label='Stamps' only %}
+  {% include 'portal/partials/nav_link.html' with active=student_section page='history' target='stamps:student_history_page' icon='activity' label='Event history' mobile_label='History' only %}
+{% elif portal_role == 'ORGANIZER' %}
+  {% include 'portal/partials/nav_link.html' with active=organizer_section page='overview' target='events:organizer_dashboard' icon='dashboard' label='Overview' only %}
+  {% include 'portal/partials/nav_link.html' with active=organizer_section page='create' target='events:event_create' icon='plus' label='Create event' only %}
+  {% include 'portal/partials/nav_link.html' with active=organizer_section page='events' target='events:organizer_events' icon='organizer' label='My events' only %}
+  {% include 'portal/partials/nav_link.html' with active=organizer_section page='notifications' target='accounts:notifications' icon='bell' label='Notifications' only %}
+{% elif portal_role == 'ADMIN' %}
+  {% include 'portal/partials/nav_link.html' with active=section page='overview' target='administration:dashboard' icon='dashboard' label='Overview' only %}
+  {% include 'portal/partials/nav_link.html' with active=section page='accounts' target='administration:accounts' icon='users' label='Accounts' only %}
+  {% include 'portal/partials/nav_link.html' with active=section page='events' target='administration:events' icon='organizer' label='Events' only %}
+  {% include 'portal/partials/nav_link.html' with active=section page='attendance' target='administration:attendance' icon='check' label='Attendance' only %}
+  {% include 'portal/partials/nav_link.html' with active=section page='activity' target='administration:activity' icon='activity' label='Activity log' mobile_label='Activity' only %}
+{% endif %}

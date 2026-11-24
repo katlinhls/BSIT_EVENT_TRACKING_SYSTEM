@@ -1,0 +1,93 @@
+{# Profile settings shared by students and organizers, with an account action panel. #}
+{% extends "portal/section_base.html" %}
+{% load static %}
+
+{% block title %}{% if profile.role == "ORGANIZER" %}Organizer Profile{% else %}Student Profile{% endif %}{% endblock %}
+{% block body_class %}{{ block.super }} student-reference-ui profile-settings-ui{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/profile.css' %}">{% endblock %}
+
+{% block content %}
+<main class="profile-settings" aria-labelledby="profile-title">
+    <header class="profile-settings-heading">
+        <a href="{% url dashboard_route %}" class="action-button action-button--compact profile-back">
+            {% include 'partials/button_content.html' with icon='back' label='Back to dashboard' only %}
+        </a>
+        <h1 id="profile-title">Profile settings</h1>
+    </header>
+
+    <div class="profile-layout">
+        {# Use a multipart form so Django receives the uploaded photo with the profile fields. #}
+        <form method="post" enctype="multipart/form-data" class="profile-settings-form">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <header class="profile-identity">
+                <div class="profile-photo" data-profile-photo-preview aria-hidden="true">
+                    {# Show the saved photo or the user's initial in the preview area. #}
+                    {% if profile.profile_image %}
+                        <img src="{{ profile.profile_image.url }}" alt="">
+                    {% else %}
+                        {{ profile.display_name|slice:":1"|upper }}
+                    {% endif %}
+                </div>
+                <div class="profile-identity-details">
+                    <h2>{{ profile.display_name }}</h2>
+                    <p>{{ profile.get_role_display }}</p>
+                    <div class="profile-photo-control">
+                        {{ form.profile_image }}
+                        <label class="action-button action-button--compact" for="{{ form.profile_image.id_for_label }}">
+                            {% include 'partials/button_content.html' with icon='upload' label='Change photo' only %}
+                        </label>
+                    </div>
+                    <p class="profile-photo-status" data-profile-photo-status role="status"></p>
+                    {{ form.profile_image.errors }}
+                </div>
+            </header>
+
+            <fieldset class="profile-form-section">
+                <legend>Personal information</legend>
+                <div class="profile-name-fields">
+                    {% include 'accounts/_profile_field.html' with field=form.first_name only %}
+                    {% include 'accounts/_profile_field.html' with field=form.middle_initial only %}
+                    {% include 'accounts/_profile_field.html' with field=form.last_name only %}
+                    {% include 'accounts/_profile_field.html' with field=form.email label='Email address' wide=True only %}
+                </div>
+            </fieldset>
+
+            {# Show the academic fields when the view supplies a student profile form. #}
+            {% if form.student_id %}
+                <fieldset class="profile-form-section">
+                    <legend>Academic information</legend>
+                    <div class="profile-academic-fields">
+                        {% include 'accounts/_profile_field.html' with field=form.student_id label='School ID' only %}
+                        {% include 'accounts/_profile_field.html' with field=form.program only %}
+                        {% include 'accounts/_profile_field.html' with field=form.year_level label='Year and section' only %}
+                    </div>
+                </fieldset>
+            {% endif %}
+
+            <div class="profile-save">
+                <button type="submit" class="action-button action-button--primary">
+                    Save changes
+                </button>
+            </div>
+        </form>
+{# Keep password, notification, and sign-out actions together. #}
+        <aside class="profile-account-panel" aria-labelledby="profile-account-heading">
+            <h2 id="profile-account-heading">Account</h2>
+            <a class="action-button" href="{% url 'accounts:password_change' %}">
+                {% include 'partials/button_content.html' with icon='lock' label='Change password' only %}
+            </a>
+            <a class="action-button" href="{% url 'accounts:notifications' %}">
+                {% include 'partials/button_content.html' with icon='bell' label='Notifications' only %}
+            </a>
+            <form method="post" action="{% url 'accounts:logout' %}">
+                {% csrf_token %}
+                <button type="submit" class="action-button">
+                    {% include 'partials/button_content.html' with icon='signout' label='Sign out' only %}
+                </button>
+            </form>
+        </aside>
+    </div>
+</main>
+{% endblock %}

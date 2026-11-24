@@ -1,0 +1,37 @@
+{# Fill the shared dashboard layout with administrator navigation and session controls. #}
+{% extends 'partials/dashboard_shell.html' %}
+
+{% block title %}Administration{% endblock %}
+{% block dashboard_home %}{% url 'administration:dashboard' %}{% endblock %}
+{% block dashboard_navigation_label %}Administration{% endblock %}
+{% block dashboard_brand %}
+  <span class="dashboard-brand-group dashboard-desktop-only">{% include 'partials/brand.html' %}</span>
+  <span class="dashboard-brand-group dashboard-mobile-only">{% include 'portal/partials/calendar_brand.html' %}</span>
+{% endblock %}
+{% block dashboard_profile %}
+  <div class="dashboard-mobile-only dashboard-admin-profile">
+    <details class="dashboard-admin-account">
+      <summary aria-label="Administrator account">{% include 'portal/partials/avatar.html' %}</summary>
+      <div class="dashboard-account-menu">
+        <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+        <form method="post" action="{% url 'accounts:logout' %}">
+          {% csrf_token %}
+          <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='signout' label='Sign out' only %}</button>
+        </form>
+      </div>
+    </details>
+  </div>
+{% endblock %}
+{# Show the signed-in administrator and a protected sign-out form. #}
+{% block dashboard_sidebar_footer %}
+  <div class="management-session">
+    <div class="management-identity">
+      <span class="management-avatar" aria-hidden="true">{{ request.user.username|slice:":1"|upper }}</span>
+      <div><strong>{{ request.user.get_full_name|default:request.user.username }}</strong><small>Administrator</small></div>
+    </div>
+    <form method="post" action="{% url 'accounts:logout' %}">
+      {% csrf_token %}
+      <button class="action-button action-button--icon" type="submit" aria-label="Sign out" title="Sign out">{% include 'partials/button_content.html' with icon='signout' only %}</button>
+    </form>
+  </div>
+{% endblock %}

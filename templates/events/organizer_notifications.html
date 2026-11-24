@@ -1,0 +1,47 @@
+{# Render stored reminders and account messages for the signed-in organizer. #}
+{% extends 'events/organizer_base.html' %}
+{% block title %}Notifications{% endblock %}
+
+{% block content %}
+  <header class="management-header workspace-page-heading organizer-page-heading">
+    <div><h1>Notifications</h1><p>Upcoming deadlines and account updates.</p></div>
+    {% if page_obj.paginator.count %}
+      <form method="post">
+        {% csrf_token %}
+        <button class="action-button workspace-secondary organizer-mark-read" type="submit">
+          {% include 'partials/button_content.html' with icon='check' label='Mark all as read' only %}
+        </button>
+      </form>
+    {% endif %}
+  </header>
+
+  <ul class="organizer-notices">
+    {% for notice in page_obj %}
+      {% if notice.can_extend %}
+        <li class="organizer-reminder">
+          {% include 'partials/icon.html' with name='clock' only %}
+          <div>
+            <h2>{{ notice.subject }}{% if not notice.is_read %}<span class="organizer-unread">New</span>{% endif %}</h2>
+            <p>{{ notice.body }}</p>
+          </div>
+          {% include 'events/partials/extend_event_link.html' with event_id=notice.event_id only %}
+        </li>
+      {% else %}
+        <li class="management-panel organizer-notice">
+          <h2 class="organizer-panel-title">
+            {% if notice.event_end_at %}{% include 'partials/icon.html' with name='clock' only %}{% else %}{% include 'partials/icon.html' with name='shield' only %}{% endif %}
+            {{ notice.subject }}{% if not notice.is_read %}<span class="organizer-unread">New</span>{% endif %}
+          </h2>
+          <p>{{ notice.body }}</p>
+          <div class="organizer-notice-meta">
+            <time datetime="{{ notice.created_at|date:'c' }}">{{ notice.created_at|date:"M j, Y" }}</time>
+            {% if notice.event_id %}<a href="{% url 'events:event_detail' notice.event_id %}">View event</a>{% endif %}
+          </div>
+        </li>
+      {% endif %}
+    {% empty %}
+      <li class="management-panel organizer-notice">You have no notifications yet.</li>
+    {% endfor %}
+  </ul>
+  {% include 'administration/partials/pagination.html' %}
+{% endblock %}

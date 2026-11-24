@@ -1,0 +1,10 @@
+{# Render one profile form field with its label, optional hint, and validation errors. #}
+<div class="profile-details-field{% if wide %} profile-details-field--wide{% endif %}">
+    <label for="{{ field.id_for_label }}">{{ label|default:field.label }}</label>
+    {{ field }}
+    {# Use the field's generated ID to associate its hint with the input. #}
+    {% if field.help_text %}
+        <small id="{{ field.auto_id }}_helptext">{{ field.help_text }}</small>
+    {% endif %}
+    {{ field.errors }}
+</div>

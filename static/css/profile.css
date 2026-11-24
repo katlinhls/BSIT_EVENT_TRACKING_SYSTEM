@@ -1,0 +1,266 @@
+/* Profile settings layout, photo preview, form fields, and account actions. */
+body.profile-settings-ui {
+  background: #102a40 radial-gradient(ellipse at 82% 0, #1c3c57, #102a40 65%);
+}
+
+.profile-settings {
+  width: min(1080px, calc(100% - 2rem));
+  margin-inline: auto;
+  padding: clamp(1.4rem, 4vw, 3rem) 0 3rem;
+}
+
+.profile-settings-heading {
+  margin-bottom: 1.4rem;
+}
+
+.profile-settings-heading h1 {
+  margin: .5rem 0 0;
+  color: var(--text);
+  font-size: clamp(1.85rem, 4vw, 2.65rem);
+  letter-spacing: -.04em;
+  line-height: 1.12;
+}
+
+.profile-settings-heading .profile-back {
+  --action-height: 36px;
+  --action-padding: .3rem .55rem .3rem 0;
+  --action-text-color: var(--blue);
+}
+
+/* Place profile details and account actions in separate columns on wide screens. */
+.profile-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 238px;
+  align-items: start;
+  gap: 1rem;
+}
+
+/* Use the same visible border on the form and account panel. */
+.profile-settings-form,
+.profile-account-panel {
+  min-width: 0;
+  border: 1px solid var(--border-light);
+  border-radius: 16px;
+  background: var(--bg-secondary);
+}
+
+.profile-settings-form {
+  padding: clamp(1rem, 3vw, 1.9rem);
+}
+
+.profile-identity {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.6rem;
+}
+
+/* Reserve a circular preview for the photo or the account initial. */
+.profile-photo {
+  display: grid;
+  flex: none;
+  place-items: center;
+  width: clamp(62px, 9vw, 80px);
+  aspect-ratio: 1;
+  overflow: hidden;
+  border-radius: 50%;
+  background: #2d5576;
+  color: var(--text);
+  font-size: clamp(1.7rem, 4vw, 2.1rem);
+  font-weight: 700;
+}
+
+.profile-photo img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.profile-identity-details {
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.profile-identity-details h2 {
+  margin: 0;
+  color: var(--text);
+  font-size: clamp(1.15rem, 3vw, 1.42rem);
+  font-weight: 720;
+  letter-spacing: -.025em;
+}
+
+.profile-identity-details p {
+  margin: .15rem 0 0;
+  color: var(--text-soft);
+  font-size: .88rem;
+}
+
+.profile-photo-control {
+  position: relative;
+  display: flex;
+  align-items: center;
+  margin: .15rem 0 0 -.4rem;
+}
+
+/* Keep the file picker focusable while the styled label acts as its visible control. */
+.profile-photo-control input {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+/* Show the focus outline on the visible upload label. */
+.profile-photo-control input:focus-visible + label {
+  outline: 3px solid #b8e0ff;
+  outline-offset: 2px;
+}
+
+.profile-photo-control .action-button {
+  --action-height: 36px;
+  --action-text-color: var(--blue);
+}
+
+.profile-identity-details .profile-photo-status {
+  max-width: 38rem;
+  color: var(--blue);
+  font-size: .78rem;
+}
+
+.profile-photo-status:empty {
+  margin: 0;
+}
+
+/* Group related personal and academic fields inside the form. */
+.profile-form-section {
+  min-width: 0;
+  margin: 0 0 1.3rem;
+  padding: 0;
+  border: 0;
+}
+
+.profile-form-section legend {
+  width: 100%;
+  margin-bottom: .9rem;
+  padding: 0 0 .65rem;
+  border-bottom: 1px solid #36566e;
+  color: var(--text);
+  font-size: 1rem;
+  font-weight: 720;
+}
+
+.profile-name-fields,
+.profile-academic-fields {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(104px, .56fr) minmax(0, 1fr);
+  gap: 1rem .85rem;
+}
+
+.profile-academic-fields {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.profile-details-field {
+  min-width: 0;
+}
+
+.profile-details-field--wide {
+  grid-column: 1 / -1;
+}
+
+.profile-details-field label {
+  display: block;
+  margin-bottom: .35rem;
+  color: #dbe8f4;
+  font-size: .83rem;
+  font-weight: 640;
+}
+
+.profile-details-field input {
+  width: 100%;
+  min-height: 44px;
+  padding: .6rem .7rem;
+  border: 1px solid #466881;
+  border-radius: 8px;
+  background: #102a40;
+  color: var(--text);
+  font: inherit;
+}
+
+/* Use a quieter style for read-only profile fields. */
+.profile-details-field input:disabled {
+  background: #1b3b56;
+  color: var(--text-soft);
+  opacity: 1;
+}
+
+/* Call attention to invalid values beside their error messages. */
+.profile-details-field input[aria-invalid="true"] {
+  border-color: #f5a9b4;
+}
+
+.profile-details-field small {
+  display: block;
+  margin-top: .35rem;
+  color: var(--text-soft);
+  font-size: .78rem;
+}
+
+.profile-settings-form .errorlist {
+  margin: .38rem 0;
+  padding: 0;
+  color: #ffc1c9;
+  font-size: .84rem;
+  list-style: none;
+}
+
+.profile-save {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: .55rem;
+}
+
+.profile-save .action-button {
+  --action-padding: .6rem 1.2rem;
+}
+
+.profile-account-panel {
+  padding: 1.05rem .7rem .7rem;
+}
+
+.profile-account-panel h2 {
+  margin: 0 .6rem .5rem;
+  color: var(--text);
+  font-size: 1rem;
+}
+
+.profile-account-panel .action-button {
+  --action-align: flex-start;
+  --action-width: 100%;
+}
+
+.profile-account-panel form {
+  margin: .4rem 0 0;
+  padding-top: .4rem;
+  border-top: 1px solid #36566e;
+}
+
+/* Stack the profile and account panels when side-by-side columns become too narrow. */
+@media (max-width: 760px) {
+  .profile-layout {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 520px) {
+  .profile-name-fields,
+  .profile-academic-fields {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .profile-save .action-button {
+    --action-width: 100%;
+  }
+}

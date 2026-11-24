@@ -1,0 +1,52 @@
+{# Edit a managed account and access password, status, and deletion actions. #}
+{% extends 'administration/base.html' %}
+{% block title %}{{ account.username }}{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% url 'administration:accounts' %}">{% include 'partials/button_content.html' with icon='back' label='Accounts' only %}</a>
+    <h1>{{ account.get_full_name|default:account.username }}</h1>
+    <p>{{ account.username }} · {{ account.profile.get_role_display }}{% if account.profile.year_level %} · {{ account.profile.year_level }}{% endif %}</p>
+  </div>
+  <span class="management-pill {% if account.is_active %}ongoing{% else %}cancelled{% endif %}">{{ account.is_active|yesno:"Active,Inactive" }}</span>
+</header>
+<div class="management-summary management-detail-grid">
+  <section class="management-panel management-form-panel">
+    <h2>Account details</h2>
+    {# Submit the name and email changes from the account details form. #}
+    <form method="post">
+      {% csrf_token %}
+      <div class="management-form-fields">{% include 'administration/partials/fields.html' %}</div>
+      <div class="management-form-actions"><button type="submit" class="action-button action-button--primary">{% include 'partials/button_content.html' with icon='check' label='Save details' arrow='arrow' only %}</button></div>
+    </form>
+  </section>
+  <section class="management-panel management-control-panel">
+    <h2>Account access</h2>
+    {% if account.profile.must_change_password and account.profile.role != 'ADMIN' %}<p>A password change is required at the next sign-in.</p>{% endif %}
+    <a class="action-button" href="{% url 'administration:account_password' account.pk %}">
+      {% if account.profile.role == 'ADMIN' %}
+        {% include 'partials/button_content.html' with icon='lock' label='Set password' arrow='arrow' only %}
+      {% else %}
+        {% include 'partials/button_content.html' with icon='lock' label='Set temporary password' arrow='arrow' only %}
+      {% endif %}
+    </a>
+    {# Show the reset email action for an active account with a saved email address. #}
+    {% if account.email and account.is_active %}
+      <form method="post" action="{% url 'administration:account_reset_email' account.pk %}">
+        {% csrf_token %}
+        <button class="action-button" type="submit">{% include 'partials/button_content.html' with icon='mail' label='Send reset email' only %}</button>
+      </form>
+    {% endif %}
+    <form method="post" action="{% url 'administration:account_status' account.pk %}">
+      {% csrf_token %}
+      {# Choose the status action that applies to the account's current state. #}
+      {% if account.is_active %}
+        <button class="action-button action-button--danger" name="status" value="inactive" type="submit">{% include 'partials/button_content.html' with icon='alert' label='Deactivate account' only %}</button>
+      {% else %}
+        <button class="action-button action-button--primary" name="status" value="active" type="submit">{% include 'partials/button_content.html' with icon='check' label='Activate account' arrow='arrow' only %}</button>
+      {% endif %}
+    </form>
+    <a class="action-button action-button--danger management-delete-link" href="{% url 'administration:account_delete' account.pk %}">{% include 'partials/button_content.html' with icon='trash' label='Delete account' only %}</a>
+  </section>
+</div>
+{% endblock %}

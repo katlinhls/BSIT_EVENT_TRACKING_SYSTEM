@@ -1,0 +1,236 @@
+/* Shared button, link, and file picker styles with options for common actions. */
+/* Use the same spacing and alignment for links, buttons, and labels styled as actions. */
+:is(a, button, label).action-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: var(--action-align, center);
+  gap: var(--action-gap, .48rem);
+  width: var(--action-width, auto);
+  max-width: 100%;
+  min-height: var(--action-height, 44px);
+  padding: var(--action-padding, .48rem .72rem);
+  border: var(--action-border, 0);
+  border-radius: var(--action-radius, 8px);
+  background: var(--action-surface, transparent);
+  color: var(--action-text-color, #dce9f5);
+  box-shadow: none;
+  backdrop-filter: none;
+  font: 650 var(--action-size, .89rem)/1.24 system-ui, -apple-system, "Segoe UI", sans-serif;
+  letter-spacing: normal;
+  text-align: start;
+  text-decoration: none;
+  text-transform: none;
+  white-space: normal;
+  cursor: pointer;
+  transition: background-color .18s ease, color .18s ease;
+}
+
+:is(a, button, label).action-button:hover {
+  border-color: var(--action-hover-border, transparent);
+  background: var(--action-hover, #ffffff13);
+  color: #fff;
+  box-shadow: none;
+  transform: none;
+}
+
+:is(a, button, label).action-button:active {
+  transform: none;
+}
+
+/* Show a clear outline when a keyboard user focuses an action. */
+.action-button:focus-visible {
+  outline: 3px solid #b8e0ff;
+  outline-offset: 3px;
+}
+
+.action-button:disabled {
+  opacity: .55;
+  cursor: not-allowed;
+}
+
+.action-button[hidden] {
+  display: none;
+}
+
+.action-button--primary,
+.action-button[aria-pressed="true"] {
+  --action-surface: #376b9a;
+  --action-text-color: #fff;
+  --action-hover: #437cae;
+}
+
+/* Reserve the warning color for destructive actions. */
+.action-button--danger {
+  --action-text-color: #ffc9d0;
+  --action-hover: #633347;
+}
+
+button.action-button--danger {
+  --action-surface: #79394f;
+  --action-text-color: #fff5f7;
+  --action-hover: #93485d;
+}
+
+/* Keep icons at a stable size beside labels that may wrap. */
+.action-icon {
+  display: inline-grid;
+  flex: none;
+  place-items: center;
+  font-size: var(--action-icon-font, 1rem);
+}
+
+.action-text {
+  display: grid;
+  gap: .22rem;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+
+.action-description {
+  color: #dceaf7;
+  font-size: .8rem;
+  font-weight: 510;
+  line-height: 1.2;
+}
+
+.action-arrow {
+  display: none;
+}
+
+/* Use a smaller action style in tables, menus, and toolbars. */
+.action-button--compact {
+  --action-height: 38px;
+  --action-padding: .3rem .5rem;
+  --action-gap: .38rem;
+  --action-size: .8rem;
+  --action-icon-font: .9rem;
+}
+
+.action-button--wide {
+  --action-width: 100%;
+}
+
+/* Give the two landing-page role choices room for a title and description. */
+.action-button--choice {
+  --action-align: flex-start;
+  --action-height: 82px;
+  --action-padding: .84rem 1.02rem;
+  --action-gap: .85rem;
+  --action-radius: 17px;
+  --action-size: 1.05rem;
+  --action-icon-font: 1.3rem;
+  --action-border: 1px solid #6387a3;
+  --action-surface: #2b4863;
+  --action-text-color: #f3f8fd;
+  --action-tile: #43617b;
+  --action-hover: #365b77;
+  --action-hover-border: #91b2cd;
+}
+
+.action-button--choice.action-button--primary {
+  --action-border: 1px solid #7a9eb9;
+  --action-surface: #2c5478;
+  --action-tile: #446788;
+  --action-hover: #35648b;
+}
+
+.action-button--choice .action-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 13px;
+  background: var(--action-tile);
+  color: #edf6ff;
+}
+
+.action-button--choice .action-text {
+  flex: 1 1 auto;
+}
+
+.action-button--choice .action-label {
+  font-weight: 720;
+}
+
+.action-button--choice .action-arrow {
+  display: grid;
+  flex: none;
+  place-items: center;
+  margin-inline-start: .16rem;
+  color: #bed6eb;
+  font-size: 1.08rem;
+}
+
+:is(a, button).action-button--icon {
+  --action-width: 44px;
+  --action-padding: .25rem;
+  --action-icon-font: 1.1rem;
+}
+
+.action-button--nav {
+  --action-align: flex-start;
+  --action-height: 44px;
+}
+
+/* Highlight the active page or dashboard section. */
+.action-button--nav[aria-current] {
+  --action-surface: #254b6a;
+  --action-text-color: #fff;
+  --action-hover: #2f5777;
+}
+
+button.action-button.student-menu-toggle {
+  display: none;
+}
+
+button.action-button.student-menu-toggle {
+  gap: 5px;
+  padding: 0;
+}
+
+@media (max-width: 900px) {
+  .student-reference-ui button.action-button.student-menu-toggle {
+    display: inline-flex;
+  }
+}
+
+/* Place the password toggle inside the input wrapper. */
+.registration-control button.action-button--field {
+  position: absolute;
+  inset: .21rem .21rem .21rem auto;
+  min-width: 3.25rem;
+  min-height: 0;
+  padding: .23rem .45rem;
+  border-radius: 6px;
+  font-size: .75rem;
+}
+
+input[type="file"]::file-selector-button {
+  margin-inline-end: .55rem;
+  padding: .36rem .55rem;
+  border: 0;
+  border-radius: 8px;
+  background: #2b4863;
+  color: #f3f8fd;
+  font: inherit;
+  cursor: pointer;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: #365b77;
+}
+
+/* Skip button transitions when the user requests reduced motion. */
+@media (prefers-reduced-motion: reduce) {
+  :is(a, button, label).action-button { transition: none; }
+}
+
+.scan-buttons .action-button {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 360px) {
+  .registration-top .action-button {
+    --action-size: .73rem;
+    --action-gap: .32rem;
+  }
+}

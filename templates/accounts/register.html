@@ -1,0 +1,91 @@
+{# Student account registration page with personal, academic, and password fields. #}
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Create Student Account · BSIT Events</title>
+  <link rel="stylesheet" href="{% static 'css/hero-base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/landing.css' %}">
+  <link rel="stylesheet" href="{% static 'css/registration.css' %}">
+  <script src="{% static 'interface.js' %}" defer></script>
+  <link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+  <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+<body class="registration">
+  <div class="landing-art" aria-hidden="true"><div class="orbit-field"></div></div>
+  {# Alert the student to review the fields that Django marked invalid. #}
+  {% if form.errors %}
+    {% include 'partials/feedback.html' with feedback_text='Review the marked fields below.' feedback_level='error' %}
+  {% else %}
+    {% include 'partials/feedback.html' %}
+  {% endif %}
+
+  <header class="registration-top">
+    <a class="brand" href="{% url 'home' %}" aria-label="BSIT Events homepage">
+      {% include 'partials/brand.html' %}
+    </a>
+    <a class="action-button action-button--compact" href="{% url 'accounts:student_login' %}">
+      {% include 'partials/button_content.html' with icon='back' label='Student login' only %}
+    </a>
+  </header>
+
+  <main class="registration-main">
+    <article class="registration-card" aria-labelledby="registration-title">
+      <header class="registration-heading">
+        <span class="registration-heading-icon">
+          {% include 'partials/icon.html' with name='user-plus' %}
+        </span>
+        <h1 id="registration-title">Create Student Account</h1>
+        <p>Use your official School ID. It will be your username.</p>
+      </header>
+
+      {{ form.non_field_errors }}
+{# Use the field partial for consistent labels, hints, and error messages. #}
+      <form method="post" class="registration-form">
+        {% csrf_token %}
+
+        <fieldset class="registration-section">
+          <legend>{% include 'partials/icon.html' with name='id-card' %} Personal information</legend>
+          <div class="registration-fields registration-personal">
+            {% include 'accounts/_registration_field.html' with field=form.student_id width='id' prefix='id-card' only %}
+            {% include 'accounts/_registration_field.html' with field=form.first_name width='name' only %}
+            {% include 'accounts/_registration_field.html' with field=form.middle_initial width='initial' optional=True only %}
+            {% include 'accounts/_registration_field.html' with field=form.last_name width='name' only %}
+            {% include 'accounts/_registration_field.html' with field=form.email width='full' prefix='mail' only %}
+          </div>
+        </fieldset>
+{# Show BSIT as the program and let the student pick their year and section. #}
+        <fieldset class="registration-section">
+          <legend>{% include 'partials/icon.html' with name='student' %} Academic information</legend>
+          <div class="registration-fields registration-pair">
+            <div>
+              <span class="registration-label">Program</span>
+              <div class="registration-program">BSIT</div>
+            </div>
+            {% include 'accounts/_registration_field.html' with field=form.year_level only %}
+          </div>
+        </fieldset>
+{# Collect both password entries and enable the visibility controls. #}
+        <fieldset class="registration-section">
+          <legend>{% include 'partials/icon.html' with name='shield' %} Account security</legend>
+          <div class="registration-fields registration-pair">
+            {% include 'accounts/_registration_field.html' with field=form.password prefix='lock' password_toggle=True only %}
+            {% include 'accounts/_registration_field.html' with field=form.confirm_password prefix='lock' password_toggle=True only %}
+          </div>
+        </fieldset>
+
+        <button type="submit" class="action-button action-button--primary action-button--wide">
+          {% include 'partials/button_content.html' with icon='user-plus' label='Register account' arrow='arrow' only %}
+        </button>
+      </form>
+
+      <footer class="registration-footer">
+        Already registered? <a href="{% url 'accounts:student_login' %}">Sign in</a>
+      </footer>
+    </article>
+  </main>
+</body>
+</html>

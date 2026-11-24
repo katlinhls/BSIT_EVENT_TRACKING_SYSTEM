@@ -1,0 +1,37 @@
+{# Show the attendance for one event with search, correction, and download actions. #}
+{% extends 'administration/base.html' %}
+{% load static %}
+{% block title %}Attendance · {{ event.name }}{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% url 'administration:attendance' %}">{% include 'partials/button_content.html' with icon='back' label='Attendance' only %}</a>
+    <h1>{{ event.name }}</h1><p>{% include 'events/partials/date_range.html' with event=event only %} · Attendance records</p>
+  </div>
+  <div class="management-actions">
+    <a class="action-button" href="{% url 'attendance:attendance_export' event.pk %}">{% include 'partials/button_content.html' with icon='download' label='Export Excel' arrow='arrow' only %}</a>
+    <a class="action-button action-button--primary" href="{% url 'administration:attendance_add' event.pk %}{% if selected_day %}?day={{ selected_day|date:'Y-m-d' }}{% endif %}">{% include 'partials/button_content.html' with icon='plus' label='Add record' arrow='arrow' only %}</a>
+  </div>
+</header>
+<section class="management-panel" data-live-attendance="{{ event.pk }}">
+  {# Search within the selected event and preserve the search while paging. #}
+  <form class="management-filters" method="get" role="search">
+    <label>Search <input type="search" name="q" value="{{ search_term }}" placeholder="Name or School ID"></label>
+    {% if event.attendance_day_count > 1 %}
+      {% include 'attendance/partials/day_input.html' with event=event selected_day=selected_day only %}
+    {% endif %}
+    <button type="submit" class="action-button action-button--compact">{% include 'partials/button_content.html' with icon='search' label='Apply filters' only %}</button>
+  </form>
+  <p class="management-empty" data-attendance-connection role="status" hidden></p>
+  <div class="management-scroll" role="region" aria-label="Attendance records table" tabindex="0">
+    <table class="management-table">
+      <thead><tr><th scope="col">Student</th>{% if event.attendance_day_count > 1 %}<th scope="col">Day</th>{% endif %}<th scope="col">Time in</th><th scope="col">Time out</th><th scope="col">Status</th>{% if event.attendance_day_count > 1 %}<th scope="col">Days completed</th>{% endif %}<th scope="col">Action</th></tr></thead>
+      <tbody data-attendance-part="rows">
+        {% include 'administration/partials/attendance_record_rows.html' %}
+      </tbody>
+    </table>
+  </div>
+  <div data-attendance-part="pagination">{% include 'administration/partials/pagination.html' %}</div>
+</section>
+{% endblock %}
+{% block scripts %}<script src="{% static 'live-attendance.js' %}" defer></script>{% endblock %}

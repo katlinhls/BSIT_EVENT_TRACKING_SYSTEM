@@ -1,0 +1,14 @@
+{# Shorten the range on small cards when both dates fall in the same calendar year. #}
+{% with start=event.date end=event.scheduled_end_date %}
+  {% if compact and start|date:"Y" == end|date:"Y" %}
+    {% if start == end %}
+      {{ start|date:"M j" }}{% if show_year %}, {{ start|date:"Y" }}{% endif %}
+    {% elif start|date:"m" == end|date:"m" %}
+      {{ start|date:"M j" }}–{{ end|date:"j" }}{% if show_year %}, {{ end|date:"Y" }}{% endif %}
+    {% else %}
+      {{ start|date:"M j" }} – {{ end|date:"M j" }}{% if show_year %}, {{ end|date:"Y" }}{% endif %}
+    {% endif %}
+  {% else %}
+    {{ start|date:"M j, Y" }}{% if start != end %} – {{ end|date:"M j, Y" }}{% endif %}
+  {% endif %}
+{% endwith %}

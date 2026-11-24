@@ -1,0 +1,14 @@
+{# Use the saved cover, with a themed fallback for events without an image. #}
+<div class="student-event-cover {{ event.status|lower }}{% if event.image %} has-image{% endif %}" aria-hidden="true">
+  {% if event.image %}
+    <img src="{{ event.image.url }}" alt="">
+  {% else %}
+    <span class="student-cover-mark">
+      {% if event.status == 'UPCOMING' %}
+        {% include 'partials/icon.html' with name='users' only %}
+      {% else %}
+        {% include 'partials/icon.html' with name='organizer' only %}
+      {% endif %}
+    </span>
+  {% endif %}
+</div>

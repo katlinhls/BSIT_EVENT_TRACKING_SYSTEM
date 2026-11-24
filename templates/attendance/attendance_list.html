@@ -1,0 +1,38 @@
+{# Show the organizer the attendance for a selected event and offer the Excel download. #}
+{% extends "portal/section_base.html" %}
+{% load static %}
+{% block title %}Attendance - {{ event.name }}{% endblock %}
+{% block extra_head %}{{ block.super }}<link rel="stylesheet" href="{% static 'css/event-timing.css' %}">{% endblock %}
+{% block content %}
+<div data-live-attendance="{{ event.pk }}">
+<div class="page-heading">
+<div>
+<h1>{{ event.name }}</h1>
+<p class="muted">Attendance records</p>
+<p class="muted" data-attendance-connection role="status" hidden></p>
+</div>
+<div class="portal-profile-links" data-attendance-part="actions">
+    {% include 'attendance/partials/list_actions.html' %}
+</div>
+</div>
+
+<div class="card" style="overflow-x: auto;">
+{% if event.attendance_day_count > 1 %}
+<form class="attendance-day-form" method="get">
+    {% include 'attendance/partials/day_input.html' with event=event selected_day=selected_day only %}
+    <button type="submit" class="action-button action-button--compact">Show day</button>
+    <a class="action-button action-button--compact" href="{% url 'attendance:attendance_list' event.pk %}">All days</a>
+</form>
+{% endif %}
+<table>
+<thead>
+<tr><th>Student ID</th><th>Student</th>{% if event.attendance_day_count > 1 %}<th>Day</th>{% endif %}<th>IN</th><th>OUT</th><th>Status</th>{% if event.attendance_day_count > 1 %}<th>Days completed</th>{% endif %}</tr>
+</thead>
+<tbody data-attendance-part="rows">
+    {% include 'attendance/partials/record_rows.html' %}
+</tbody>
+</table>
+</div>
+</div>
+{% endblock %}
+{% block scripts %}<script src="{% static 'live-attendance.js' %}" defer></script>{% endblock %}

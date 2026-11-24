@@ -1,0 +1,30 @@
+{# Reusable sign-in dialog for one account role. #}
+<dialog id="{{ panel_role }}-panel" class="login-panel" data-role="{{ panel_role }}" aria-labelledby="{{ panel_role }}-title" {% if initial_role == panel_role %}open{% endif %}>
+  {% if initial_role == panel_role %}{% include 'partials/feedback.html' %}{% endif %}
+  <div class="panel-content">
+    <a href="{% url 'home' %}" class="action-button action-button--icon panel-back" data-close-panel aria-label="Back to homepage">
+      {% include 'partials/button_content.html' with icon='back' only %}
+    </a>
+    <span class="role-icon panel-icon">{% include 'partials/icon.html' with name=panel_icon %}</span>
+    <p class="eyebrow">BSIT Events</p>
+    <h2 id="{{ panel_role }}-title">{{ panel_title }}</h2>
+    <p>{% if panel_role == 'student' %}Sign in with your School ID to access your events and stamps.{% else %}Sign in to manage events and record attendance.{% endif %}</p>
+    {# Post credentials to the role's sign-in view with Django's form security token. #}
+    <form method="post" action="{% url login_url_name %}">
+      {% csrf_token %}
+      {% include 'partials/login_fields.html' with account_role=panel_role %}
+      <button type="submit" class="action-button action-button--primary action-button--wide panel-submit">
+        {% include 'partials/button_content.html' with icon='sign-in' label='Sign in' arrow='arrow' only %}
+      </button>
+    </form>
+    <div class="panel-links">
+      <a class="action-button action-button--compact" href="{% url 'accounts:password_reset' %}">
+        {% include 'partials/button_content.html' with icon='lock' label='Reset password' only %}
+      </a>
+      {# Offer self-registration on the student panel. #}
+      {% if panel_role == 'student' %}<a class="action-button action-button--compact" href="{% url 'accounts:register_student' %}">
+        {% include 'partials/button_content.html' with icon='user-plus' label='Create student account' only %}
+      </a>{% endif %}
+    </div>
+  </div>
+</dialog>

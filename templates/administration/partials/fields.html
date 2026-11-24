@@ -1,0 +1,10 @@
+{# Render the full management form, including hidden fields and visible inputs. #}
+{% if form.non_field_errors and not non_field_feedback %}<div class="management-form-errors" role="alert">{{ form.non_field_errors }}</div>{% endif %}
+{# Include values such as a record version that the server needs with the submission. #}
+{% for hidden in form.hidden_fields %}
+  {{ hidden }}
+  {% if hidden.errors %}<div class="management-form-errors" role="alert">{{ hidden.errors }}</div>{% endif %}
+{% endfor %}
+{% for field in form.visible_fields %}
+  {% include 'administration/partials/field.html' with field=field only %}
+{% endfor %}

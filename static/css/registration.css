@@ -1,0 +1,205 @@
+/* Student registration page layout, input groups, field hints, and errors. */
+.registration {
+  position: relative;
+  isolation: isolate;
+  min-height: 100svh;
+}
+
+.registration-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .8rem;
+  min-height: 66px;
+  padding: .6rem clamp(1rem, 4vw, 3.75rem);
+  border-bottom: 1px solid var(--border);
+  background: color-mix(in srgb, var(--page) 87%, #0b1521);
+}
+
+.registration-main {
+  display: grid;
+  justify-items: center;
+  padding: clamp(1rem, 3vh, 1.8rem) clamp(.85rem, 3vw, 2rem) 2.5rem;
+}
+
+/* Use a readable form width and a solid background behind the fields. */
+.registration-card {
+  width: min(100%, 55rem);
+  padding: clamp(1rem, 3vw, 2.5rem);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+}
+
+.registration-heading {
+  display: grid;
+  justify-items: center;
+  margin-bottom: 1.65rem;
+  text-align: center;
+}
+
+.registration-heading-icon {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border: 1px solid #81afcf85;
+  border-radius: 50%;
+  background: var(--primary);
+  color: var(--text);
+  font-size: 1.45rem;
+}
+
+.registration-heading h1 {
+  margin: .7rem 0 .25rem;
+  font-size: clamp(1.8rem, 3.2vw, 2.55rem);
+}
+
+.registration-heading p {
+  margin: 0;
+  color: var(--muted);
+  font-size: .93rem;
+}
+
+.registration-form {
+  display: grid;
+  gap: 1.12rem;
+}
+
+.registration-section {
+  min-inline-size: 0;
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+/* Label the personal, academic, and password groups. */
+.registration-section legend {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  width: 100%;
+  margin-bottom: .7rem;
+  padding: 0 0 .48rem;
+  border-bottom: 1px solid var(--border);
+  color: var(--accent);
+  font-size: .8rem;
+  font-weight: 760;
+  letter-spacing: .075em;
+  text-transform: uppercase;
+}
+
+.registration-section legend .icon { font-size: 1rem; }
+
+.registration-fields {
+  display: grid;
+  gap: .7rem .85rem;
+}
+
+/* Let personal fields span a flexible grid according to how much space they need. */
+.registration-personal { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+.registration-field--id { grid-column: span 4; }
+.registration-field--name { grid-column: span 3; }
+.registration-field--initial { grid-column: span 2; }
+.registration-field--full { grid-column: 1 / -1; }
+.registration-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+.registration-field { min-width: 0; }
+
+.registration-label {
+  display: block;
+  margin: 0 0 .28rem;
+  color: var(--text);
+  font-size: .87rem;
+  font-weight: 670;
+}
+
+.registration-required { color: var(--danger); }
+
+/* Anchor any icon or password toggle inside its field wrapper. */
+.registration-control { position: relative; }
+
+.registration-control input,
+.registration-control select,
+.registration-program {
+  min-height: 44px;
+  margin: 0;
+  padding: .55rem .7rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  line-height: 1.45;
+}
+
+.registration-control select { appearance: none; cursor: pointer; }
+.registration-control input:focus::placeholder { opacity: 0; }
+.registration-control.has-prefix input { padding-inline-start: 2.7rem; }
+.registration-control.has-toggle input { padding-inline-end: 4.25rem; }
+
+/* Position the field icon without covering the input text. */
+.registration-prefix {
+  position: absolute;
+  inset: 1px auto 1px 1px;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  border-inline-end: 1px solid var(--border);
+  color: var(--accent);
+  pointer-events: none;
+}
+
+/* Display the fixed program with the same dimensions as a form control. */
+.registration-program {
+  display: flex;
+  align-items: center;
+  background: #1c405b;
+  color: var(--muted);
+}
+
+.registration-hint {
+  display: block;
+  margin-top: .23rem;
+  color: var(--muted);
+  font-size: .75rem;
+}
+
+/* Place the validation messages directly below the fields. */
+.registration .errorlist {
+  margin: .3rem 0 0;
+  padding: 0;
+  color: var(--danger);
+  font-size: .81rem;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+.registration-control [aria-invalid="true"] { border-color: var(--danger); }
+
+.registration-footer {
+  margin-top: 1rem;
+  padding-top: .8rem;
+  border-top: 1px solid var(--border);
+  color: var(--muted);
+  font-size: .88rem;
+  text-align: center;
+}
+
+.registration-footer a { margin-inline-start: .25rem; font-weight: 720; }
+
+/* Reduce the personal information grid to two columns on smaller screens. */
+@media (max-width: 760px) {
+  .registration-personal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .registration-field--id,
+  .registration-field--name,
+  .registration-field--initial { grid-column: auto; }
+}
+
+@media (max-width: 520px) {
+  .registration-top { min-height: 58px; }
+  .registration-top .brand { gap: .46rem; font-size: .77rem; letter-spacing: .09em; }
+  .registration-top .brand-mark { width: 33px; height: 33px; font-size: 1rem; }
+  .registration-main { padding-inline: .7rem; }
+  .registration-heading { margin-bottom: 1.35rem; }
+  .registration-pair, .registration-personal { grid-template-columns: minmax(0, 1fr); }
+}

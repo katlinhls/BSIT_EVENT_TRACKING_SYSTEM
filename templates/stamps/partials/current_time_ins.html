@@ -1,0 +1,22 @@
+{% if current_time_ins %}
+  <ul class="student-time-in-list">
+    {% for record in current_time_ins %}
+      <li class="student-time-in-record">
+        <div>
+          <a class="student-time-in-event" href="{% url 'events:event_detail' record.event_id %}">{{ record.event.name }}</a>
+          {% if record.event.venue %}
+            <p class="student-time-in-venue">
+              {% include 'partials/icon.html' with name='pin' only %}<span>{{ record.event.venue }}</span>
+            </p>
+          {% endif %}
+        </div>
+        <div class="student-time-in-when">
+          <span>Time In</span>
+          <time datetime="{{ record.in_at|date:'c' }}">{{ record.in_at|date:"M j, Y · g:i A" }}</time>
+        </div>
+      </li>
+    {% endfor %}
+  </ul>
+{% else %}
+  <p class="student-time-in-empty">No current check-ins.</p>
+{% endif %}

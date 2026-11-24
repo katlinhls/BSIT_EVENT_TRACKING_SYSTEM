@@ -1,0 +1,35 @@
+{# Sign-in page for administrators using the management login form. #}
+{% load static %}
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Administrator sign-in · BSIT Events</title>
+  <link rel="stylesheet" href="{% static 'css/hero-base.css' %}">
+  <link rel="stylesheet" href="{% static 'css/administration.css' %}">
+  <link rel="stylesheet" href="{% static 'css/feedback.css' %}">
+  <script src="{% static 'interface.js' %}" defer></script>
+  <link rel="stylesheet" href="{% static 'css/buttons.css' %}">
+  <link rel="stylesheet" href="{% static 'css/theme.css' %}">
+</head>
+<body class="management management-login">
+  {# Show sign-in errors from the form in the shared feedback area. #}
+  {% include 'partials/feedback.html' with feedback_errors=form.non_field_errors %}
+  <main class="management-login-card management-panel">
+    <div class="management-login-top">
+      <a href="{% url 'home' %}" class="action-button action-button--icon" aria-label="Back to homepage">{% include 'partials/button_content.html' with icon='back' only %}</a>
+      <span class="brand">{% include 'partials/brand.html' %}</span>
+    </div>
+    <h1>Administrator sign-in</h1>
+    <p>Manage accounts, events, and attendance.</p>
+    <form method="post">
+      {% csrf_token %}
+      {# Reuse the field renderer for labels and validation messages. #}
+      {% include 'administration/partials/fields.html' with non_field_feedback=True %}
+      <button type="submit" class="action-button action-button--primary action-button--wide">{% include 'partials/button_content.html' with icon='sign-in' label='Sign in' arrow='arrow' only %}</button>
+    </form>
+    <a href="{% url 'accounts:password_reset' %}" class="action-button management-reset-link">{% include 'partials/button_content.html' with icon='lock' label='Reset password' arrow='arrow' only %}</a>
+  </main>
+</body>
+</html>

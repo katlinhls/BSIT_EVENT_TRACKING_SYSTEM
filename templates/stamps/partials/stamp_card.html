@@ -1,0 +1,31 @@
+<section class="management-panel dashboard-section student-stamp-card{% if student_section == 'stamps' %} student-stamp-card--full{% endif %}" id="event-card" aria-labelledby="stamps-heading">
+  <div class="management-panel-header">
+    <h2 id="stamps-heading">{% include 'partials/icon.html' with name='stamp' only %} Stamp card</h2>
+    <span class="dashboard-section-note">
+      {% if stamps_earned > stamp_slots|length %}
+        {{ stamps_earned }} earned · {{ stamp_slots|length }} shown
+      {% else %}
+        {{ stamps_earned }} of {{ stamp_slots|length }} earned
+      {% endif %}
+    </span>
+  </div>
+  <ul class="dashboard-stamps" aria-label="Attendance stamps">
+    {% for stamp in stamp_slots %}
+      <li class="dashboard-stamp{% if stamp %} is-earned{% endif %}"{% if stamp %} title="{{ stamp.event.name }}"{% endif %}>
+        <span class="dashboard-stamp-mark" aria-hidden="true">
+          {% if stamp and stamp.event.stamp_design %}
+            <img src="{{ stamp.event.stamp_design.url }}" alt="" loading="lazy">
+          {% else %}
+            {% include 'partials/icon.html' with name='stamp' only %}
+          {% endif %}
+        </span>
+        {% if stamp %}
+          <span class="dashboard-stamp-name">{{ stamp.event.name }}</span>
+        {% else %}
+          <span class="visually-hidden">Empty stamp slot {{ forloop.counter }}</span>
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+  <p class="dashboard-stamp-note">Complete both scans on every scheduled day to earn the program’s stamps.</p>
+</section>

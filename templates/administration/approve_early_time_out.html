@@ -1,0 +1,22 @@
+{# The signed-in administrator confirms this event's early Time Out window. #}
+{% extends 'administration/base.html' %}
+{% block title %}Approve early Time Out{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% url 'administration:event_detail' event.pk %}">{% include 'partials/button_content.html' with icon='back' label='Back to event' only %}</a>
+    <h1>Approve early Time Out</h1>
+    <p>{{ event.name }} · {{ event.date }}</p>
+  </div>
+</header>
+<section class="management-panel management-form-panel">
+  <p>Confirm your password to open Time Out for this event for up to five minutes.</p>
+  <form method="post">
+    {% csrf_token %}
+    {% include 'administration/partials/field.html' with field=form.password only %}
+    <div class="management-form-actions">
+      <button type="submit" class="action-button action-button--primary">Approve Time Out</button>
+    </div>
+  </form>
+</section>
+{% endblock %}

@@ -1,0 +1,9 @@
+{# Keep the selected event in the URL and return focus to the analytics section. #}
+<form class="analytics-filter" method="get" action="#analytics">
+  {{ field.label_tag }}
+  <div class="analytics-filter-controls">
+    {{ field }}
+    <button type="submit" class="action-button action-button--primary">Apply</button>
+  </div>
+  {% if field.errors %}<div role="alert">{{ field.errors }}</div>{% endif %}
+</form>

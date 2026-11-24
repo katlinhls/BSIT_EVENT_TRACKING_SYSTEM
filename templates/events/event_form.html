@@ -1,0 +1,77 @@
+{# Share the event form while letting each role keep its dashboard. #}
+{% extends form_base_template %}
+{% load static %}
+
+{% block title %}{{ title }}{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/event-form.css' %}">
+  {% include 'events/partials/map_assets.html' with show_map=True only %}
+{% endblock %}
+
+{% block content %}
+  {% if cancel_pk %}{% url cancel_name pk=cancel_pk as return_url %}{% else %}{% url cancel_name as return_url %}{% endif %}
+  <a class="action-button event-editor-back" href="{{ return_url }}">{% include 'partials/button_content.html' with icon='back' label='Back' only %}</a>
+  <header class="management-header event-editor-heading">
+    <div>
+      <h1 id="event-editor-title">{{ title }}</h1>
+      <p>Set the program dates, daily hours, and stamp award.</p>
+    </div>
+  </header>
+
+  <form class="event-editor" method="post" enctype="multipart/form-data" aria-labelledby="event-editor-title">
+    {% csrf_token %}
+    {% if form.non_field_errors %}
+      <div class="management-form-errors" role="alert">{{ form.non_field_errors }}</div>
+    {% endif %}
+    <div class="event-editor-grid">
+      <section class="management-panel event-editor-panel" aria-labelledby="event-editor-details">
+        <h2 class="event-editor-panel-title" id="event-editor-details">{% include 'partials/icon.html' with name='organizer' only %} Event details</h2>
+        {% include 'administration/partials/field.html' with field=form.name only %}
+        {% include 'administration/partials/field.html' with field=form.venue only %}
+        {% if form.organizer %}
+          {% include 'administration/partials/field.html' with field=form.organizer only %}
+        {% endif %}
+
+        <fieldset class="event-editor-schedule">
+          <legend>Schedule</legend>
+          <div class="event-editor-times">
+            {% include 'administration/partials/field.html' with field=form.date only %}
+            {% include 'administration/partials/field.html' with field=form.start_time only %}
+            {% include 'administration/partials/field.html' with field=form.end_date only %}
+            {% include 'administration/partials/field.html' with field=form.end_time only %}
+          </div>
+          <p class="management-help">These hours apply to each scheduled day.</p>
+        </fieldset>
+
+        <div class="event-editor-stamp-award">
+          {% include 'administration/partials/field.html' with field=form.stamps_per_student only %}
+        </div>
+
+        <details class="event-editor-options"{% if form.description.errors or form.status.errors or form.status.value == 'CANCELLED' %} open{% endif %}>
+          <summary>More options</summary>
+          {% include 'administration/partials/field.html' with field=form.description only %}
+          {% include 'administration/partials/field.html' with field=form.status only %}
+        </details>
+        <div class="event-editor-actions">
+          <a class="action-button event-editor-cancel" href="{{ return_url }}">Cancel</a>
+          <button class="action-button action-button--primary event-editor-submit" type="submit">
+            {% include 'partials/button_content.html' with icon='check' label=submit_label only %}
+          </button>
+        </div>
+      </section>
+
+      <div class="event-editor-aside">
+        <section class="management-panel event-editor-panel event-editor-map" aria-labelledby="event-editor-map-title" data-event-location-picker>
+          <h2 class="event-editor-panel-title" id="event-editor-map-title">{% include 'partials/icon.html' with name='pin' only %} Map location</h2>
+          {% include 'events/partials/location_picker.html' with form=form search_label='Search for a location' icon_search=True only %}
+        </section>
+        <section class="management-panel event-editor-panel event-editor-media" aria-labelledby="event-editor-media-title">
+          <h2 class="event-editor-panel-title" id="event-editor-media-title">{% include 'partials/icon.html' with name='upload' only %} Media</h2>
+          {% include 'administration/partials/field.html' with field=form.image only %}
+          {% include 'administration/partials/field.html' with field=form.stamp_design only %}
+        </section>
+      </div>
+    </div>
+  </form>
+{% endblock %}

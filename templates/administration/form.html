@@ -1,0 +1,21 @@
+{# Reusable page for management forms such as account creation and password changes. #}
+{% extends 'administration/base.html' %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<header class="management-header">
+  <div>
+    <a class="action-button action-button--compact management-back" href="{% if cancel_pk %}{% url cancel_name pk=cancel_pk %}{% else %}{% url cancel_name %}{% endif %}">{% include 'partials/button_content.html' with icon='back' label='Back' only %}</a>
+    <h1>{{ title }}</h1>
+    {% if description %}<p>{{ description }}</p>{% endif %}
+  </div>
+</header>
+<section class="management-panel management-form-panel">
+  {# Enable file uploads when the view requests a multipart form. #}
+  <form method="post"{% if multipart %} enctype="multipart/form-data"{% endif %}>
+    {# Include the security token with each form submission. #}
+    {% csrf_token %}
+    <div class="management-form-fields">{% include 'administration/partials/fields.html' %}</div>
+    <div class="management-form-actions"><button type="submit" class="action-button action-button--primary">{% include 'partials/button_content.html' with icon='check' label=submit_label arrow='arrow' only %}</button></div>
+  </form>
+</section>
+{% endblock %}

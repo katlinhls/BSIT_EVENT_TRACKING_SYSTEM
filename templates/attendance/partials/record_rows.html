@@ -1,0 +1,14 @@
+{# Render the student name, recorded times, and status for each row. #}
+{% for record in records %}
+<tr>
+<td>{{ record.student.student_id }}</td>
+<td>{{ record.student.display_name }}</td>
+{% if event.attendance_day_count > 1 %}<td>{{ record.attendance_date|date:"M j, Y" }}</td>{% endif %}
+<td>{{ record.in_at|date:"M d, Y h:i:s A"|default:"—" }}</td>
+<td>{{ record.out_at|date:"M d, Y h:i:s A"|default:"—" }}</td>
+<td><span class="badge">{{ record.status|title }}</span></td>
+{% if event.attendance_day_count > 1 %}<td>{{ record.days_completed }} of {{ event.attendance_day_count }}</td>{% endif %}
+</tr>
+{% empty %}
+<tr><td colspan="{% if event.attendance_day_count > 1 %}7{% else %}5{% endif %}">No students scanned yet.</td></tr>
+{% endfor %}

@@ -1,0 +1,10 @@
+{# Use the signed-in user's photo or initials in the workspace. #}
+<span class="management-avatar dashboard-avatar" aria-hidden="true">
+  {% if request.user.profile.profile_image %}
+    <img src="{{ request.user.profile.profile_image.url }}" alt="">
+  {% elif request.user.first_name or request.user.last_name %}
+    {{ request.user.first_name|first|upper }}{{ request.user.last_name|first|upper }}
+  {% else %}
+    {{ request.user.username|slice:":2"|upper }}
+  {% endif %}
+</span>

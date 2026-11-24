@@ -1,0 +1,10 @@
+{# Show previous and next links for multi-page lists while preserving the current filters. #}
+{% if page_obj.paginator.num_pages > 1 %}
+  <nav class="management-pagination" aria-label="Pagination">
+    <span>Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+    <div class="management-actions">
+      {% if page_obj.has_previous %}<a class="action-button action-button--compact" href="{% querystring page=page_obj.previous_page_number %}">{% include 'partials/button_content.html' with icon='back' label='Previous' only %}</a>{% endif %}
+      {% if page_obj.has_next %}<a class="action-button action-button--compact" href="{% querystring page=page_obj.next_page_number %}">{% include 'partials/button_content.html' with icon='arrow' label='Next' only %}</a>{% endif %}
+    </div>
+  </nav>
+{% endif %}

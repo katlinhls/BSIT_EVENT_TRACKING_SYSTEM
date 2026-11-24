@@ -1,0 +1,340 @@
+/* Event cards, QR preview, stamps, and attendance history for students. */
+.student-portal .student-overview-heading .workspace-primary { min-width: min(100%, 178px); }
+.student-portal .dashboard-sections { gap: 1.35rem; }
+.student-overview-grid, .student-qr-layout, .student-detail-grid { display: grid; align-items: start; gap: 1.25rem; min-width: 0; }
+.student-overview-grid { grid-template-columns: minmax(0, 1fr); }
+.student-upcoming { min-width: 0; }
+.student-portal #upcoming-events h2 { margin: .2rem 0 .65rem; font-size: 1.45rem; }
+.student-portal .dashboard-upcoming-grid {
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: .9rem;
+  padding: 0;
+}
+.student-portal .dashboard-event {
+  position: relative;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-content: stretch;
+  align-items: stretch;
+  gap: .78rem;
+  padding: .7rem;
+  border-radius: 16px;
+  background: var(--workspace-surface);
+}
+.student-portal .dashboard-event:hover { border-color: var(--workspace-cyan); }
+.student-portal .dashboard-event-content { flex: 1 1 auto; gap: .5rem; padding: 0 .25rem .2rem; }
+.student-portal .dashboard-event h3 { flex: none; margin: 0; font-size: 1.15rem; font-weight: 680; }
+.student-portal .dashboard-event-details { gap: .48rem; font-size: .81rem; color: var(--workspace-muted); }
+.student-portal .dashboard-event-details .icon { color: var(--workspace-dim); }
+.student-portal .dashboard-venue-link { position: relative; z-index: 1; color: var(--workspace-muted); text-decoration: none; }
+.student-portal .dashboard-venue-link:hover { color: var(--workspace-cyan); text-decoration: underline; }
+.student-portal .dashboard-event .student-event-statuses { position: absolute; top: 19px; right: 18px; }
+.student-event-link {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 34px;
+  margin-top: auto;
+  padding-top: .58rem;
+  color: var(--workspace-cyan);
+  font-size: .82rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+.student-event-link:hover { color: var(--workspace-text); }
+.student-event-link::after { position: absolute; inset: 0; border-radius: 16px; content: ""; }
+.student-event-link:focus-visible::after { outline: 2px solid var(--workspace-cyan); outline-offset: 3px; }
+.student-portal .student-empty { margin: 0; padding: 1rem 1.2rem; }
+
+/* Uploaded event images and the local cover pattern share the same frame. */
+.student-event-cover {
+  position: relative;
+  isolation: isolate;
+  height: 92px;
+  min-width: 0;
+  overflow: hidden;
+  border-radius: 11px;
+  background: linear-gradient(112deg, #204862, #25406b 75%, #3a3e67);
+}
+.student-event-cover.upcoming { background: linear-gradient(112deg, #493d69, #2d426e 80%); }
+.student-event-cover::after {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background:
+    repeating-radial-gradient(ellipse at 86% 92%, transparent 0 19px, #afe7fb26 20px 21px, transparent 22px 29px),
+    repeating-linear-gradient(90deg, transparent 0 27px, #bdbcf620 28px 29px);
+  content: "";
+}
+.student-event-cover.has-image { background: var(--workspace-inset); }
+.student-event-cover.has-image::after { content: none; }
+.student-event-cover img { display: block; width: 100%; height: 100%; object-fit: cover; }
+.student-cover-mark {
+  position: absolute;
+  top: 18px;
+  left: 20px;
+  display: grid;
+  place-items: center;
+  width: 41px;
+  height: 41px;
+  border-radius: 11px;
+  background: var(--workspace-cyan);
+  color: var(--workspace-ink);
+}
+.student-event-cover.upcoming .student-cover-mark { background: var(--workspace-violet); }
+
+/* Status labels keep the same meanings across cards and attendance history. */
+.student-event-statuses { display: flex; flex-wrap: wrap; align-items: center; gap: .4rem; }
+.student-event-statuses .management-pill[hidden] { display: none; }
+.student-portal .management-pill {
+  --workspace-status-ink: var(--workspace-dim);
+  --workspace-status-bg: var(--workspace-inset);
+  min-width: 4.3rem;
+  justify-content: center;
+  border: 0;
+  padding: .24rem .57rem;
+  background: var(--workspace-status-bg);
+  color: var(--workspace-status-ink);
+  font-size: .71rem;
+  line-height: 1.3;
+}
+.student-portal .management-pill.upcoming { --workspace-status-ink: var(--workspace-violet); --workspace-status-bg: var(--workspace-violet-bg); }
+.student-portal .management-pill.ongoing, .student-portal .management-pill.completed { --workspace-status-ink: var(--workspace-mint); --workspace-status-bg: var(--workspace-mint-bg); }
+.student-portal .management-pill.in, .student-portal .management-pill.excused { --workspace-status-ink: var(--workspace-amber); --workspace-status-bg: var(--workspace-amber-bg); }
+.student-portal .management-pill.cancelled { --workspace-status-ink: var(--workspace-rose); --workspace-status-bg: var(--workspace-rose-bg); }
+
+/* Keep current check-ins easy to find on the overview. */
+.student-portal .student-current-time-ins .management-panel-header h2 .icon { color: var(--workspace-mint); }
+.student-time-in-list {
+  display: grid;
+  gap: .65rem;
+  margin: 0;
+  padding: 0 1.25rem 1.12rem;
+  list-style: none;
+}
+.student-time-in-record {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .65rem 1.1rem;
+  padding: .72rem .9rem;
+  border: 1px solid var(--workspace-divider);
+  border-radius: 11px;
+  background: var(--workspace-inset);
+}
+.student-time-in-record > div:first-child { flex: 1 1 15rem; min-width: 0; }
+.student-time-in-event { color: var(--workspace-cyan); font-weight: 680; }
+.student-time-in-event:hover { text-decoration: underline; }
+.student-time-in-record .student-time-in-venue {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  margin: .26rem 0 0;
+  color: var(--workspace-muted);
+  font-size: .83rem;
+  overflow-wrap: anywhere;
+}
+.student-time-in-venue .icon { flex: none; color: var(--workspace-dim); }
+.student-time-in-when { display: grid; gap: .21rem; min-width: 0; }
+.student-time-in-when span { color: var(--workspace-muted); font-size: .76rem; }
+.student-time-in-when time { color: var(--workspace-text); font-size: .85rem; font-weight: 650; }
+.student-current-time-ins :is(.student-time-in-empty, .student-time-in-connection) {
+  margin: 0;
+  padding: 0 1.25rem 1.12rem;
+  color: var(--workspace-muted);
+  font-size: .83rem;
+}
+
+/* Keep the overview QR compact and the dedicated scan screen comfortably large. */
+.student-portal .management-panel-header { padding: 1.12rem 1.25rem .8rem; }
+.student-portal .management-panel-header h2, .student-active-event h2, .student-detail-panel h2 {
+  display: flex;
+  align-items: center;
+  gap: .55rem;
+  font-size: 1.2rem;
+}
+.student-portal .management-panel-header h2 .icon, .student-active-event h2 .icon { color: var(--workspace-cyan); font-size: .85rem; }
+.student-portal .student-qr-panel {
+  background-image: radial-gradient(ellipse at 50% 0%, #23537545, transparent 67%);
+}
+.student-portal .dashboard-qr { gap: .55rem; padding: 0 1rem 1.4rem; }
+.student-portal .dashboard-qr-preview {
+  width: min(100%, 176px);
+  padding: 0;
+  border: 0;
+  border-radius: 14px;
+  background: var(--workspace-paper);
+}
+.student-portal .dashboard-qr--full .dashboard-qr-preview { width: min(100%, 300px); }
+.student-portal .dashboard-qr-copy { font-size: .84rem; }
+.student-portal .dashboard-qr-copy p:first-child { margin: 0; }
+.student-portal .dashboard-qr-timer {
+  width: fit-content;
+  margin: .5rem auto .7rem;
+  padding: .18rem .9rem;
+  border-radius: 999px;
+  background: var(--workspace-blue-bg);
+  color: #d0edff;
+  font-size: .72rem;
+}
+.student-portal .dashboard-qr-copy .workspace-secondary { min-width: min(100%, 172px); min-height: 39px; font-size: .79rem; }
+.student-active-event, .student-detail-panel { padding: 1.28rem; min-width: 0; }
+.student-active-event > .student-event-statuses, .student-detail-panel > .student-event-statuses { margin-top: 1.1rem; }
+.student-active-event h3 { margin: .9rem 0 0; font-size: 1.42rem; overflow-wrap: anywhere; }
+.student-active-event > a {
+  display: inline-block;
+  margin-top: 1.05rem;
+  color: var(--workspace-cyan);
+  font-size: .85rem;
+  font-weight: 680;
+  text-decoration: none;
+}
+.student-active-event > a:hover { text-decoration: underline; }
+
+/* The stamp holders and the attendance table use calmer, readable accents. */
+.student-portal .student-stamp-card { background-image: linear-gradient(100deg, #14635d12, transparent 62%); }
+.student-portal .student-stamp-card h2 .icon { color: var(--workspace-mint); }
+.student-portal .student-history h2 .icon { color: var(--workspace-violet); }
+.student-portal .dashboard-section-note { color: var(--workspace-muted); font-weight: 550; }
+.student-portal .dashboard-stamps { padding: .5rem 1.25rem .45rem; }
+.student-portal .dashboard-stamp {
+  display: grid;
+  grid-auto-rows: min-content;
+  grid-template-rows: auto;
+  align-content: center;
+  gap: .34rem;
+  min-height: 60px;
+  padding: .4rem .25rem;
+  border: 1px solid var(--workspace-border);
+  border-radius: 11px;
+  background: var(--workspace-inset);
+}
+.student-portal .dashboard-stamp.is-earned {
+  border-color: #3c6f6e;
+  background: linear-gradient(155deg, var(--workspace-mint-bg), #1a3949);
+}
+.student-portal .dashboard-stamp-mark { width: 25px; height: 25px; border: 0; color: var(--workspace-dim); }
+.student-portal .dashboard-stamp.is-earned .dashboard-stamp-mark, .student-portal .dashboard-stamp.is-earned .dashboard-stamp-name { color: var(--workspace-mint); }
+.student-portal .dashboard-stamp-name { max-width: 100%; }
+.student-portal .dashboard-stamp-note { padding: .65rem 1.25rem 1.1rem; color: var(--workspace-muted); }
+.student-portal .student-history .management-scroll { border-radius: 0 0 16px 16px; }
+.student-portal .student-history .management-table { font-size: .8rem; }
+.student-portal .student-history .management-table th {
+  border-color: var(--workspace-divider);
+  padding-block: .7rem;
+  background: var(--workspace-inset);
+  color: var(--workspace-muted);
+  font-size: .72rem;
+}
+.student-portal .student-history .management-table td { border-color: var(--workspace-divider); padding-block: .48rem; color: var(--workspace-muted); }
+.student-portal .student-history .management-table tbody tr:hover { background: #1b3650; }
+.student-portal .student-history .management-row-link { color: var(--workspace-text); }
+.student-portal .student-history .dashboard-attendance-days { margin: 0; }
+.student-portal .student-history summary { color: var(--workspace-cyan); font-size: .8rem; font-weight: 650; }
+.student-portal .student-history ul { padding: .35rem 0 0; list-style: none; }
+.student-portal .student-history li { display: grid; gap: .05rem; color: var(--workspace-muted); font-size: .72rem; }
+.student-portal .student-history li + li { margin-top: .45rem; }
+.student-portal .student-history li strong { color: var(--workspace-text); font-weight: 630; }
+
+/* Show venue art until a real saved map has loaded. */
+.student-detail-cover { margin-bottom: 1.55rem; }
+.student-detail-cover .student-event-cover { height: clamp(170px, 15vw, 210px); border-radius: 13px; }
+.student-detail-cover .student-event-cover.has-image { height: clamp(200px, 22vw, 350px); }
+.student-detail-cover .student-event-cover img { object-fit: contain; }
+.student-detail-panel h2 .icon { color: var(--workspace-cyan); font-size: .9rem; }
+.student-detail-panel p.management-event-description { margin-top: 1.25rem; }
+.student-detail-panel .management-details { margin-top: 1.8rem; }
+.student-detail-panel .management-details dt { color: var(--workspace-text); font-weight: 650; }
+.student-detail-panel .management-details dd { color: var(--workspace-muted); font-size: .9rem; font-weight: 500; }
+.student-detail-panel .management-details dd small { display: block; }
+.student-detail-footer { display: grid; justify-items: start; gap: .85rem; margin-top: 1.2rem; padding-top: 1rem; border-top: 1px solid var(--workspace-divider); }
+.student-portal .student-detail-footer p { margin: 0; font-size: .82rem; }
+.student-venue-panel h2 .icon { color: var(--workspace-violet); }
+.student-venue-preview {
+  position: relative;
+  display: grid;
+  place-items: center;
+  min-height: 185px;
+  margin: 1rem 0 0;
+  overflow: hidden;
+  border-radius: 11px;
+  background:
+    linear-gradient(90deg, transparent 28%, #365675 28% 29%, transparent 29% 68%, #365675 68% 69%, transparent 69%),
+    linear-gradient(0deg, transparent 31%, #355472 31% 32%, transparent 32% 71%, #355472 71% 72%, transparent 72%),
+    repeating-linear-gradient(150deg, #142c45 0 35px, #18334c 36px 62px, #132940 63px 90px);
+}
+.student-venue-panel:has([data-event-location-preview]:not([hidden])) .student-venue-preview { display: none; }
+.student-venue-pin { display: grid; place-items: center; width: 51px; height: 51px; border-radius: 50%; background: var(--workspace-mint-bg); color: var(--workspace-mint); }
+.student-venue-pin .icon { width: 22px; height: 22px; }
+.student-venue-preview figcaption { position: absolute; inset: auto .72rem .6rem; color: var(--workspace-muted); font-size: .75rem; overflow-wrap: anywhere; }
+.student-venue-panel .event-location-view { margin: 1rem 0 0; gap: .9rem; }
+.student-venue-panel .event-location-map { height: 205px; border: 1px solid var(--workspace-border); background: var(--workspace-inset); }
+.student-venue-panel .event-location-view .action-button {
+  min-width: min(100%, 165px);
+  --action-surface: var(--workspace-blue-bg);
+  --action-hover: #2e5773;
+  --action-text-color: #d0edff;
+}
+.student-portal .student-venue-panel .action-button:hover { color: var(--workspace-text); }
+
+@media (min-width: 1025px) {
+  .student-overview-grid { grid-template-columns: minmax(0, 1.8fr) minmax(245px, 1fr); }
+  .student-portal .dashboard-upcoming-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .student-qr-layout { grid-template-columns: minmax(0, 1.33fr) minmax(0, 1fr); margin-inline-start: clamp(0px, 10.8vw, 153px); }
+  .student-qr-layout:has(> :only-child) { grid-template-columns: minmax(0, 550px); justify-content: center; margin-inline-start: 0; }
+  .student-portal .dashboard-qr-preview { width: min(100%, 145px); }
+  .student-portal .dashboard-qr--full .dashboard-qr-preview { width: min(100%, 248px); }
+  .student-portal .dashboard-qr--full { padding: .6rem 1.3rem 1.65rem; }
+  .student-portal .dashboard-stamps { grid-template-columns: repeat(10, minmax(0, 1fr)); gap: .5rem; width: min(100%, 610px); margin-inline: auto; }
+  .student-portal .student-stamp-card--full .dashboard-stamps { width: min(100%, 970px); gap: .9rem; }
+  .student-portal .dashboard-stamp { min-height: 51px; }
+  .student-portal .student-stamp-card--full .dashboard-stamp { min-height: 76px; }
+  .student-portal .student-stamp-card:not(.student-stamp-card--full) .dashboard-stamp-name {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .student-detail-grid { grid-template-columns: minmax(0, 1.41fr) minmax(0, 1fr); }
+  .student-detail-grid:has(> :only-child) { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (min-width: 651px) and (max-width: 1024px) {
+  .student-qr-layout:has(> :nth-child(2)), .student-detail-grid:has(> :nth-child(2)) { grid-template-columns: minmax(0, 1.3fr) minmax(0, 1fr); }
+}
+
+@media (max-width: 650px) {
+  /* The phone overview summarizes stamps. My QR and History have their own tabs. */
+  .student-portal .student-overview-heading {
+    flex-direction: column;
+    align-items: stretch;
+    gap: .7rem;
+    margin-bottom: 1.85rem;
+  }
+  .student-portal .student-overview-heading .workspace-primary { width: 100%; }
+  .student-portal .student-overview-content { gap: 1.05rem; }
+  .student-overview-content :is(.student-qr-panel, .student-stamp-card, .student-history) { display: none; }
+  .student-portal #upcoming-events h2 { font-size: 1.18rem; }
+  .student-portal .student-overview-grid .dashboard-upcoming-grid { grid-template-columns: minmax(0, 1fr); }
+  .student-overview-grid .student-event-cover { height: 88px; }
+  .student-portal .student-stamp-summary { display: block; padding: .95rem 1.05rem; }
+  .student-stamp-summary h2 { display: flex; align-items: center; gap: .7rem; font-size: 1.16rem; }
+  .student-stamp-summary h2 .icon { color: var(--workspace-mint); }
+  .student-stamp-summary p { font-size: .82rem; }
+  .student-stamp-summary a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: .35rem;
+    color: var(--workspace-cyan);
+    font-size: .82rem;
+    font-weight: 650;
+    text-decoration: none;
+  }
+  .student-stamp-summary a:hover { text-decoration: underline; }
+  .student-portal .student-history .management-table td { padding: 0; }
+  .student-portal .student-history-detail { grid-column: 1 / -1; }
+  .student-portal .dashboard-stamp { min-height: 59px; }
+}

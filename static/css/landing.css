@@ -1,0 +1,144 @@
+/* Landing page illustration, responsive hero layout, and role-specific sign-in panels. */
+/* Use shared custom values for the hero gutter and sign-in panel width. */
+.landing {
+  --hero-gutter: max(6vw, calc((100% - 1116px) / 2));
+  --panel-size: min(42vw, 550px);
+  position: relative;
+  isolation: isolate;
+  background: #17344d;
+}
+/* Layer grid lines and gradients behind the page content. */
+.landing-art {
+  position: fixed;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  background:
+    linear-gradient(90deg, transparent 50.3%, #a3c6e320 50.34%, transparent 50.46%),
+    repeating-linear-gradient(90deg, transparent 0 49px, #94b9d406 50px 51px),
+    repeating-linear-gradient(0deg, transparent 0 49px, #94b9d406 50px 51px),
+    radial-gradient(ellipse at 76% 36%, #345f82 0%, #254969 32%, transparent 66%),
+    linear-gradient(122deg, #132c43, #1a3a56 59%, #244967);
+}
+/* Move the background accent horizontally as the selected panel changes. */
+.orbit-field {
+  position: absolute;
+  width: clamp(500px, 57vw, 1000px);
+  aspect-ratio: 2.38;
+  top: 47%;
+  left: 68%;
+  transform: translate(-50%, -50%) rotate(-29deg);
+  transition: left .58s var(--ease);
+}
+.orbit-field::before, .orbit-field::after {
+  position: absolute;
+  content: "";
+  inset: 0;
+  border: 1px solid #a9cce327;
+  border-radius: 50%;
+}
+.orbit-field::after { inset: 13% 13% 7% 4%; border-color: #a9cce320; }
+/* Place the brand, main sign-in choices, and footer in three rows. */
+.hero {
+  display: grid;
+  grid-template-rows: auto 1fr auto;
+  align-items: center;
+  min-height: 100svh;
+  padding: clamp(1.5rem, 7.5vh, 3.4rem) var(--hero-gutter) clamp(1.5rem, 3vh, 2.5rem);
+}
+.hero > .brand { justify-self: start; }
+.hero-copy { padding: clamp(2rem, 5vh, 4.5rem) 0; }
+.hero-copy .eyebrow { margin: 0 0 1rem; font-size: clamp(.59rem, .85vw, .69rem); }
+.hero h1 {
+  margin: 0;
+  font-size: clamp(3.4rem, 5.55vw, 6.3rem);
+  font-weight: 850;
+  letter-spacing: -.067em;
+  line-height: .98;
+  text-wrap: initial;
+}
+.hero h1 span { color: #accde8; }
+.hero-description {
+  max-width: 455px;
+  margin: 1.35rem 0 2rem;
+  font-size: 1.04rem;
+}
+.role-actions { display: grid; grid-template-columns: repeat(2, minmax(0, 310px)); gap: 1rem; }
+.hero-footer {
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+  font-size: .67rem;
+}
+.hero-footer > span { font-size: .58rem; font-weight: 800; letter-spacing: .18em; text-transform: uppercase; }
+.hero-footer > span::before { content: ""; display: inline-block; width: 32px; margin-right: 10px; border-bottom: 1px solid #a4c6e1; vertical-align: middle; }
+
+/* Place the student dialog on the right and allow its content to scroll. */
+.login-panel {
+  position: fixed;
+  inset: 0 0 0 auto;
+  width: var(--panel-size);
+  max-width: none;
+  height: 100dvh;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  overflow: auto;
+  overscroll-behavior: contain;
+  border: 0;
+  border-inline-start: 1px solid #6384a0;
+  background: var(--auth-panel);
+  color: var(--text);
+  box-shadow: var(--shadow);
+  --panel-entry: 100%;
+}
+/* Open the organizer dialog from the left. */
+.login-panel[data-role="organizer"] {
+  inset: 0 auto 0 0;
+  border-inline-start: 0;
+  border-inline-end: 1px solid #6384a0;
+  --panel-entry: -100%;
+}
+.login-panel[open] { animation: panel-in .48s var(--ease) both; }
+.login-panel::backdrop { background: #07182724; }
+.panel-content { max-width: 480px; margin: auto; padding: clamp(1.5rem, 7vh, 4rem) clamp(1.4rem, 4vw, 3.75rem); }
+.panel-back { margin-bottom: clamp(1.6rem, 4.5vh, 2.8rem); }
+.panel-icon { width: 50px; height: 50px; font-size: 1.35rem; }
+.login-panel h2 { margin: .4rem 0 .6rem; font-size: clamp(2rem, 4vw, 3.15rem); letter-spacing: -.05em; }
+.login-panel p { margin: 0; }
+.login-panel .eyebrow { margin-top: 1.3rem; }
+.login-panel form { margin-top: 1.6rem; }
+.panel-submit { width: 100%; margin-top: 1.35rem; }
+.panel-links { display: flex; flex-wrap: wrap; gap: .75rem 1rem; margin-top: 1.2rem; font-size: .88rem; }
+.landing[data-panel="student"] .orbit-field { left: 39%; }
+.landing[data-panel="organizer"] .orbit-field { left: 85%; }
+.landing:is([data-panel="student"], [data-panel="organizer"]) { overflow: hidden; }
+/* Leave room for the open dialog alongside the hero on wider screens. */
+.landing:is([data-panel="student"], [data-panel="organizer"]) .hero {
+  padding-inline: max(5vw, 1.5rem);
+  width: calc(100% - var(--panel-size));
+}
+.landing[data-panel="organizer"] .hero { margin-inline-start: var(--panel-size); }
+.landing:is([data-panel="student"], [data-panel="organizer"]) .hero h1 { font-size: clamp(2.6rem, 4.7vw, 5.25rem); }
+.landing:is([data-panel="student"], [data-panel="organizer"]) .role-actions { visibility: hidden; }
+/* Slide the panel in from the side chosen by its role. */
+@keyframes panel-in {
+  from { transform: translateX(var(--panel-entry)); }
+  to { transform: translateX(0); }
+}
+@media (max-width: 900px) {
+  .landing { --panel-size: 49vw; }
+}
+/* Adapt the hero and sign-in panel to the smaller screen. */
+@media (max-width: 700px) {
+  .landing { --panel-size: 100%; --hero-gutter: max(6vw, 1.3rem); }
+  .hero h1 { font-size: clamp(2.8rem, 9.9vw, 4.4rem); }
+  .landing:is([data-panel="student"], [data-panel="organizer"]) .hero { visibility: hidden; width: 100%; margin: 0; }
+  .panel-content { padding-inline: 1.5rem; }
+  .login-panel, .login-panel[data-role="organizer"] { border: 0; }
+}
+@media (max-width: 520px) {
+  .role-actions { grid-template-columns: minmax(0, 350px); }
+  .hero-copy { padding-block: 1.9rem; }
+  .hero-description { margin-block: 1rem 1.35rem; }
+}

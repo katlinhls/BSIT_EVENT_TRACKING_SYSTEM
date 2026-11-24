@@ -1,0 +1,51 @@
+{# Organizer summary cards, live reminders, attendance charts, and assigned events. #}
+{% extends 'events/organizer_base.html' %}
+{% load static %}
+
+{% block title %}Organizer dashboard{% endblock %}
+{% block extra_head %}
+  {{ block.super }}
+  <link rel="stylesheet" href="{% static 'css/analytics.css' %}">
+{% endblock %}
+
+{% block content %}
+  <header class="management-header workspace-page-heading organizer-page-heading">
+    <div>
+      <h1>Organizer dashboard</h1>
+      <p>Welcome, {{ request.user.profile.display_name }} · {{ today|date:"l, M j, Y" }}</p>
+    </div>
+    {% include 'events/partials/create_event_link.html' %}
+  </header>
+
+  <div class="dashboard-sections organizer-overview">
+    <div class="management-metrics organizer-metrics">
+      {% for label, value, icon, tone in metrics %}
+        <div class="management-metric organizer-metric {{ tone }}">
+          <span class="organizer-metric-label">{{ label }}</span>
+          <span class="organizer-metric-icon">{% include 'partials/icon.html' with name=icon only %}</span>
+          <strong>{{ value|stringformat:"02d" }}</strong>
+        </div>
+      {% endfor %}
+    </div>
+
+    {% if ending_notices %}
+      <section class="organizer-reminders" aria-label="Events ending soon">
+        {% for notice in ending_notices %}
+          {% with event=notice.event %}
+            <div class="organizer-reminder" role="status">
+              {% include 'partials/icon.html' with name='clock' only %}
+              <div>
+                <strong>{{ event.name }} ends in {{ notice.minutes }} minute{{ notice.minutes|pluralize }}</strong>
+                <p>{% if event.attendance_day_count > 1 %}Day {{ event.attendance_day_count }} · {% endif %}{{ event.ends_at|time:"g:i A" }} · Extend the schedule if the program is still running.</p>
+              </div>
+              {% include 'events/partials/extend_event_link.html' with event_id=event.pk only %}
+            </div>
+          {% endwith %}
+        {% endfor %}
+      </section>
+    {% endif %}
+
+    {% include 'events/analytics.html' with analytics=analytics compact=True only %}
+    {% include 'events/partials/organizer_event_table.html' with events=events has_more_events=has_more_events only %}
+  </div>
+{% endblock %}

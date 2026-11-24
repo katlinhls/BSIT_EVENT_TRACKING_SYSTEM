@@ -1,0 +1,11 @@
+# Install these project dependencies with python -m pip install -r requirements.txt.
+# Web framework for the views, templates, database, and sign-in system.
+Django>=5.2,<6.0
+# Generate the rotating attendance QR code.
+qrcode[pil]>=8.0
+# Support uploaded images and render the QR code as PNG.
+Pillow>=11.0
+# Create the downloadable attendance workbook.
+openpyxl>=3.1,<4
+# Read local configuration from the project's .env file.
+python-dotenv>=1.1,<2

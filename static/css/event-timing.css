@@ -1,0 +1,69 @@
+/* Keep reminders readable beside the scanner and on the organizer dashboard. */
+.event-end-reminders {
+  display: grid;
+  gap: .7rem;
+  margin-bottom: 1rem;
+}
+
+.event-end-reminder {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .7rem 1rem;
+  padding: .8rem 1rem;
+  border-inline-start: 3px solid #80b9e5;
+  border-radius: 8px;
+  background: #1b3b54;
+}
+
+.event-end-reminder[hidden] {
+  display: none;
+}
+
+.event-end-reminder p {
+  flex: 1 1 16rem;
+  margin: 0;
+  color: #dbe8f4;
+  overflow-wrap: anywhere;
+}
+
+.event-end-reminder strong {
+  display: block;
+  margin-bottom: .15rem;
+  color: var(--text);
+}
+
+.scanner-card .event-end-reminder,
+.scanner-card .scanner-timing-message {
+  margin: 0 0 1rem;
+}
+
+.scanner-card .scan-buttons {
+  flex-wrap: wrap;
+}
+
+.attendance-day-form {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: end;
+  gap: .65rem;
+  margin-block: .85rem 1rem;
+}
+
+.attendance-day-form label {
+  display: grid;
+  flex: 0 1 12rem;
+  gap: .35rem;
+  margin: 0;
+  font-size: .88rem;
+}
+
+.attendance-day-form input {
+  min-height: 44px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding-inline: .6rem;
+  color: var(--text);
+  background: #112c42;
+  color-scheme: dark;
+}

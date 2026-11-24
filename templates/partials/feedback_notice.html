@@ -1,0 +1,1 @@
+{# Render one feedback message with a level that the script and styles can recognize. #}<p class="feedback-notice" data-level="{{ level|default:'info' }}" role="{% if level == 'error' %}alert{% else %}status{% endif %}">{{ text }}</p>
